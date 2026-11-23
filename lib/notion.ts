@@ -22,6 +22,8 @@ async function notion(path: string, init: { method?: string; body?: unknown } = 
     cache: "no-store",
   });
   const data = await res.json();
+  if (res.status === 404 || res.status === 401)
+    throw new Error("Notion can't see MK Orders. In Notion open MK Orders > ••• > Connections and add the \"MK Orders app\" integration, then reload.");
   if (!res.ok) throw new Error(`Notion ${res.status}: ${data?.message ?? "request failed"}`);
   return data;
 }
