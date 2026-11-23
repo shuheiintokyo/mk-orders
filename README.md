@@ -14,8 +14,10 @@ Update `HYOGO_MIN_WAGE` in `lib/pricing.js` every October.
 
 1. Notion: go to notion.so/profile/integrations, create an **internal** integration (read, update, insert content), copy its secret.
    Open the MK Orders database, `•••` > Connections > add the integration.
-2. Vercel: import this repo, then add the environment variables from `.env.example`.
-3. Open the site and log in.
+2. Vercel project `mk-orders` is linked to this repo; every push to `main` deploys.
+   `NOTION_DATA_SOURCE_ID` and `SESSION_SECRET` are already set. Add `NOTION_TOKEN`, `ADMIN_PASSWORD`
+   and `KOBE_PASSWORD` in Vercel > mk-orders > Settings > Environment Variables, then redeploy.
+3. Open https://mk-orders.vercel.app and log in.
 
 ## Local development
 
