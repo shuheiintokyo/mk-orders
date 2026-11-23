@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { BrandMark } from "../../components/ui";
 
 export default function Login() {
   const [pw, setPw] = useState("");
@@ -14,14 +15,16 @@ export default function Login() {
     window.location.href = data.role === "kobe" ? "/kobe" : "/";
   }
   return (
-    <main className="wrap" style={{ maxWidth: 380, paddingTop: 80 }}>
+    <main className="login">
       <form className="card" onSubmit={submit}>
-        <h1 style={{ marginTop: 0, fontSize: 22 }}>MK Production</h1>
-        <label>Password / パスワード
+        <div className="brand"><BrandMark /><span>MK Production<small>3D print service</small></span></div>
+        <h1>Welcome back</h1>
+        <p className="muted" style={{ margin: "0 0 24px" }}>パスワードを入力してください</p>
+        <label className="field">Password / パスワード
           <input type="password" value={pw} onChange={(e) => setPw(e.target.value)} autoFocus autoComplete="current-password" />
         </label>
-        {err && <p className="err">{err}</p>}
-        <button className="btn primary big" style={{ marginTop: 14 }} disabled={busy || !pw}>{busy ? "…" : "Log in / ログイン"}</button>
+        {err && <p className="err" role="alert">{err}</p>}
+        <button className="btn primary lg" style={{ marginTop: 20 }} disabled={busy || !pw}>{busy ? "…" : "Log in / ログイン"}</button>
       </form>
     </main>
   );

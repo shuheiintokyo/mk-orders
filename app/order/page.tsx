@@ -4,8 +4,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { api, today } from "../../lib/client";
 import { CARRIERS, Order, PAYMENT_METHODS, RESINS, STATUSES, Status } from "../../lib/types";
 import { dataDeleteDate, HYOGO_MIN_WAGE, laborCost, materialCost, suggestedQuote, yen } from "../../lib/pricing";
+import { AppBar, StatusPill } from "../../components/ui";
 
 const blank: Partial<Order> = { title: "", status: "Estimate", yenPerMl: 10, paid: false, quotedDate: today() };
+
+function F({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+  return <label className="field"><span className="lbl">{label}{hint && <span className="hint">{hint}</span>}</span>{children}</label>;
+}
 
 function Editor() {
   const id = useSearchParams().get("id");
@@ -16,7 +21,7 @@ function Editor() {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => { if (id) api<Order>(`/api/orders/${id}`).then(setO).catch((e) => setErr(e.message)); }, [id]);
-  if (!o) return <main className="wrap"><p className="muted">{err || "Loading…"}</p></main>;
+  if (!o) return (<><AppBar active="orders" /><main className="wrap narrow">{err ? <div className="alert">{err}</div> : [0, 1, 2].map((i) => <div key={i} className="skeleton" style={{ height: 140 }} />)}</main></>);
 
   const set = <K extends keyof Order>(k: K, v: Order[K] | null) => { setSaved(false); setO((p) => ({ ...p, [k]: v })); };
   const numIn = (k: keyof Order) => ({
@@ -44,75 +49,96 @@ function Editor() {
   }
 
   const q = suggestedQuote(o);
+  const idx = STATUSES.indexOf((o.status ?? "Estimate") as Status);
+  const saveBtn = <button className="btn primary" onClick={save} disabled={saving}>{saving ? "Saving…" : saved ? "✓ Saved" : "Save changes"}</button>;
+
   return (
-    <main className="wrap" style={{ maxWidth: 860 }}>
-      <div className="bar">
-        <div className="row"><a className="btn" href="/">← Orders</a><h1>{id ? `MK-${o.number ?? ""}` : "New order"}</h1></div>
-        <div className="row">
-          {o.url && <a className="btn" href={o.url} target="_blank" rel="noreferrer">Open in Notion</a>}
-          <button className="btn primary" onClick={save} disabled={saving}>{saving ? "Saving…" : saved ? "Saved ✓" : "Save"}</button>
+    <>
+      <AppBar active="orders" />
+      <main className="wrap narrow">
+        <div className="page-head">
+          <div>
+            <a href="/" className="eyebrow" style={{ textDecoration: "none" }}>← All orders</a>
+            <h1>{id ? (o.title || "Untitled") : "New order"}</h1>
+            {id && <div className="row" style={{ marginTop: 6 }}><span className="id">MK-{o.number}</span><StatusPill status={(o.status ?? "Estimate") as Status} /></div>}
+          </div>
+          <div className="row">
+            {o.url && <a className="btn" href={o.url} target="_blank" rel="noreferrer">Open in Notion ↗</a>}
+            {saveBtn}
+          </div>
         </div>
-      </div>
-      {err && <p className="err">{err}</p>}
+        {err && <div className="alert" role="alert">{err}</div>}
 
-      <div className="card">
-        <label>Order name<input {...txt("title")} placeholder="e.g. Tanaka figure base" /></label>
-        <div className="tabs" style={{ marginTop: 12 }}>
-          {STATUSES.map((s) => <button key={s} className={`tab ${o.status === s ? "on" : ""}`} onClick={() => setStatus(s)}>{s}</button>)}
-        </div>
-      </div>
+        <div className="stack">
+          <section className="card">
+            <h2 className="section-title"><span className="n">1</span>Order & status</h2>
+            <F label="Order name"><input {...txt("title")} placeholder="e.g. Tanaka figure base" /></F>
+            <div className="stepper" style={{ marginTop: 16 }} role="radiogroup" aria-label="Status">
+              {STATUSES.map((s, i) => (
+                <button key={s} role="radio" aria-checked={o.status === s} className={`step s-${s} ${i < idx ? "done" : ""} ${o.status === s ? "on" : ""}`} onClick={() => setStatus(s)}>
+                  <span className="bar" />{s}
+                </button>
+              ))}
+            </div>
+          </section>
 
-      <div className="card section">
-        <h2>Quote</h2>
-        <div className="grid">
-          <label>Resin<select {...txt("resin")}><option value="">–</option>{RESINS.map((r) => <option key={r}>{r}</option>)}</select></label>
-          <label>Resin ml (from PreForm)<input {...numIn("resinMl")} /></label>
-          <label>Yen per ml (default 10)<input {...numIn("yenPerMl")} placeholder="10" /></label>
-          <label>Hands-on minutes (Kobe)<input {...numIn("handsOnMinutes")} /></label>
-          <label>Shipping yen<input {...numIn("shippingYen")} /></label>
-          <label>Carrier<select {...txt("carrier")}><option value="">–</option>{CARRIERS.map((r) => <option key={r}>{r}</option>)}</select></label>
-        </div>
-        <div className="quote section">
-          <div><div className="muted">Suggested quote</div><div className="big">{yen(q)}</div></div>
-          <div className="muted">Material {yen(materialCost(o))} + labour {yen(laborCost(o))} (¥{HYOGO_MIN_WAGE}/h) + shipping {yen(o.shippingYen ?? 0)}, rounded up to ¥100</div>
-          <button className="btn" onClick={() => set("finalPrice", q)} disabled={!q}>Use as final price</button>
-        </div>
-      </div>
+          <section className="card">
+            <h2 className="section-title"><span className="n">2</span>Quote</h2>
+            <div className="grid">
+              <F label="Resin"><select {...txt("resin")}><option value="">Choose…</option>{RESINS.map((r) => <option key={r}>{r}</option>)}</select></F>
+              <F label="Resin ml" hint="From PreForm"><input {...numIn("resinMl")} /></F>
+              <F label="Yen per ml" hint="Default 10"><input {...numIn("yenPerMl")} placeholder="10" /></F>
+              <F label="Hands-on minutes" hint="Kobe work time"><input {...numIn("handsOnMinutes")} /></F>
+              <F label="Shipping yen"><input {...numIn("shippingYen")} /></F>
+              <F label="Carrier"><select {...txt("carrier")}><option value="">Choose…</option>{CARRIERS.map((r) => <option key={r}>{r}</option>)}</select></F>
+            </div>
+            <div className="quote">
+              <div><div className="k">Suggested quote</div><div className="amount">{yen(q)}</div></div>
+              <div className="breakdown">
+                <span>Material <b>{yen(materialCost(o))}</b></span>
+                <span>Labour <b>{yen(laborCost(o))}</b> <span className="muted">(¥{HYOGO_MIN_WAGE.toLocaleString()}/h)</span></span>
+                <span>Shipping <b>{yen(o.shippingYen ?? 0)}</b></span>
+                <span className="muted">Rounded up to ¥100</span>
+              </div>
+              <button className="btn" onClick={() => set("finalPrice", q)} disabled={!q}>Use as final price</button>
+            </div>
+          </section>
 
-      <div className="card section">
-        <h2>Customer & payment</h2>
-        <div className="grid">
-          <label>Customer<input {...txt("customer")} /></label>
-          <label>Customer email<input type="email" {...txt("customerEmail")} /></label>
-          <label>Model files link<input type="url" {...txt("modelFiles")} placeholder="Google Drive folder" /></label>
-          <label>Final price (yen)<input {...numIn("finalPrice")} /></label>
-          <label>Payment method<select {...txt("paymentMethod")}><option value="">–</option>{PAYMENT_METHODS.map((r) => <option key={r}>{r}</option>)}</select></label>
-          <label style={{ flexDirection: "row", alignItems: "center", gap: 8, marginTop: 22 }}>
-            <input type="checkbox" checked={!!o.paid} onChange={(e) => set("paid", e.target.checked)} /> Paid
-          </label>
-        </div>
-        {o.modelFiles && <p><a href={o.modelFiles} target="_blank" rel="noreferrer">Open model files ↗</a></p>}
-      </div>
+          <section className="card">
+            <h2 className="section-title"><span className="n">3</span>Customer & payment</h2>
+            <div className="grid">
+              <F label="Customer"><input {...txt("customer")} /></F>
+              <F label="Customer email"><input type="email" {...txt("customerEmail")} /></F>
+              <F label="Model files link" hint="Google Drive folder"><input type="url" {...txt("modelFiles")} placeholder="https://drive.google.com/…" /></F>
+              <F label="Final price (yen)"><input {...numIn("finalPrice")} /></F>
+              <F label="Payment method"><select {...txt("paymentMethod")}><option value="">Choose…</option>{PAYMENT_METHODS.map((r) => <option key={r}>{r}</option>)}</select></F>
+              <label className="field check"><input type="checkbox" checked={!!o.paid} onChange={(e) => set("paid", e.target.checked)} />Paid</label>
+            </div>
+            {o.modelFiles && <div className="meta-line"><a className="chip" href={o.modelFiles} target="_blank" rel="noreferrer">📁 Open model files ↗</a></div>}
+          </section>
 
-      <div className="card section">
-        <h2>Dates & shipping</h2>
-        <div className="grid">
-          <label>Quoted date<input type="date" {...txt("quotedDate")} /></label>
-          <label>Agreed date<input type="date" {...txt("agreedDate")} /></label>
-          <label>Shipped date<input type="date" {...txt("shippedDate")} /></label>
-          <label>Tracking number<input {...txt("trackingNumber")} /></label>
-        </div>
-        <p className="muted">Data delete date: <strong>{dataDeleteDate(o.shippedDate ?? null) ?? "set when shipped (+90 days)"}</strong></p>
-      </div>
+          <section className="card">
+            <h2 className="section-title"><span className="n">4</span>Dates & shipping</h2>
+            <div className="grid">
+              <F label="Quoted date"><input type="date" {...txt("quotedDate")} /></F>
+              <F label="Agreed date"><input type="date" {...txt("agreedDate")} /></F>
+              <F label="Shipped date"><input type="date" {...txt("shippedDate")} /></F>
+              <F label="Tracking number"><input {...txt("trackingNumber")} /></F>
+            </div>
+            <div className="meta-line">
+              <span className="chip">🗑️ Delete customer files on <b style={{ color: "var(--ink)" }}>{dataDeleteDate(o.shippedDate ?? null) ?? "shipped date + 90 days"}</b></span>
+            </div>
+          </section>
 
-      <div className="card section">
-        <h2>Notes</h2>
-        <textarea {...txt("notes")} placeholder="Notes for Kobe show on their to do page" />
-      </div>
-      <div className="row section" style={{ justifyContent: "flex-end" }}>
-        <button className="btn primary" onClick={save} disabled={saving}>{saving ? "Saving…" : saved ? "Saved ✓" : "Save"}</button>
-      </div>
-    </main>
+          <section className="card">
+            <h2 className="section-title"><span className="n">5</span>Notes for Kobe</h2>
+            <textarea {...txt("notes")} placeholder="Shown on the Kobe to do page, e.g. sand the support marks carefully" />
+          </section>
+        </div>
+
+        <div className="savebar">{saveBtn}</div>
+      </main>
+    </>
   );
 }
 
