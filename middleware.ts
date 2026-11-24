@@ -6,6 +6,9 @@ export async function middleware(req: NextRequest) {
   if (pathname === "/login" || pathname === "/api/login") return NextResponse.next();
   // Public website: the front page and the news pages need no login.
   if (pathname === "/" || pathname === "/news" || pathname.startsWith("/news/")) return NextResponse.next();
+  // Social: the news card image must be public (Instagram fetches it); the daily post route checks
+  // the cron secret or the admin login itself.
+  if (pathname === "/api/social/card" || pathname === "/api/social/post") return NextResponse.next();
 
   const role = await readToken(req.cookies.get(COOKIE)?.value);
   if (!role) {

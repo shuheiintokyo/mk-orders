@@ -22,6 +22,20 @@ Update `HYOGO_MIN_WAGE` in `lib/pricing.js` every October.
    and `KOBE_PASSWORD` in Vercel > mk-orders > Settings > Environment Variables, then redeploy.
 3. Open https://mk-orders.vercel.app and log in.
 
+## Daily social posts
+
+Every morning around 08:00 JST (Vercel Cron, `vercel.json`) `/api/social/post` picks one item from last
+night's News Watch (subjects take turns) and posts it through Buffer's free plan:
+
+- **X**: Japanese summary + link to the subject page on the site
+- **Threads**: English headline + link
+- **Instagram**: Japanese + English caption with a news card image made by `/api/social/card` (1080×1350 JPEG)
+
+Buffer channels are found from the API key, so no ids need copying. Nothing is posted until
+`BUFFER_API_KEY` and `CRON_SECRET` are set in Vercel. Set `SOCIAL_PAUSED=1` to pause.
+Logged in as admin, open `/api/social/post?dry=1` to preview today's texts, and `/api/social/card` for today's image.
+The Buffer key expires (longest choice is 1 year); make a new one and replace it in Vercel before then.
+
 ## Local development
 
 ```
