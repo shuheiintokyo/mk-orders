@@ -18,6 +18,13 @@ export type DailyItem = {
   url: string;
 };
 
+/** Days of the week (0 = Sunday, Japan time) when X gets a post. Buffer's free plan allows X
+ *  3 posts a week, so the default is Monday, Wednesday and Friday. Set SOCIAL_X_DAYS to change it. */
+export function xPostsToday(now = new Date()) {
+  const days = (process.env.SOCIAL_X_DAYS ?? "1,3,5").split(",").map((d) => Number(d.trim()));
+  return days.includes(new Date(now.getTime() + 9 * 3600_000).getUTCDay());
+}
+
 /** Today's date in Japan and the day number used to rotate subjects. */
 export function jstToday(now = new Date()) {
   const d = new Date(now.getTime() + 9 * 3600_000);

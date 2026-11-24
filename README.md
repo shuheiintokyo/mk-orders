@@ -28,7 +28,8 @@ Update `HYOGO_MIN_WAGE` in `lib/pricing.js` every October.
 Every morning around 08:00 JST (Vercel Cron, `vercel.json`) `/api/social/post` picks one item from last
 night's News Watch (subjects take turns) and posts it through Buffer's free plan:
 
-- **X**: Japanese summary + link to the subject page on the site
+- **X**: Japanese summary + link to the subject page on the site, on Monday, Wednesday and Friday only
+  (Buffer's free plan allows X 3 posts a week; change the days with `SOCIAL_X_DAYS`, e.g. `1,3,5`, 0 = Sunday)
 - **Threads**: English headline + link
 - **Instagram**: Japanese + English caption with a news card image made by `/api/social/card` (1080×1350 JPEG)
 
