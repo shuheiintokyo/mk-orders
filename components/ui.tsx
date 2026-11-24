@@ -14,12 +14,13 @@ export function AppBar({ active }: { active: "orders" | "new" | "kobe" }) {
   return (
     <header className="appbar">
       <div className="appbar-in">
-        <a className="brand" href="/">
+        <a className="brand" href="/orders">
           <BrandMark />
           <span>MK Production<small>Order manager</small></span>
         </a>
         <nav className="nav">
-          <a className={active === "orders" ? "on" : ""} href="/">📋 <span>Orders</span></a>
+          <a href="/">📰 <span>Site</span></a>
+          <a className={active === "orders" ? "on" : ""} href="/orders">📋 <span>Orders</span></a>
           <a className={active === "kobe" ? "on" : ""} href="/kobe">🏠 <span>Kobe to do</span></a>
           <button className="btn ghost sm" onClick={logout}>Log out</button>
         </nav>

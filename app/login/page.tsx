@@ -12,7 +12,7 @@ export default function Login() {
     const data = await res.json();
     setBusy(false);
     if (!res.ok) return setErr(data.error);
-    window.location.href = data.role === "kobe" ? "/kobe" : "/";
+    window.location.href = data.role === "kobe" ? "/kobe" : "/orders";
   }
   return (
     <main className="login">
