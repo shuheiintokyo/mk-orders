@@ -5,7 +5,7 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   if (pathname === "/login" || pathname === "/api/login") return NextResponse.next();
   // Public website: the front page and the news pages need no login.
-  if (pathname === "/" || pathname === "/news" || pathname.startsWith("/news/")) return NextResponse.next();
+  if (pathname === "/" || pathname === "/contact" || pathname === "/news" || pathname.startsWith("/news/")) return NextResponse.next();
 
   const role = await readToken(req.cookies.get(COOKIE)?.value);
   if (!role) {
