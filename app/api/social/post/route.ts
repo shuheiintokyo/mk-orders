@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { currentRole } from "../../../../lib/auth";
-import { bufferChannels, bufferPost, cardUrl, dailyItem, postsFor } from "../../../../lib/social";
+import { bufferChannels, bufferPost, cardUrl, dailyItem, postsFor, xPostsToday } from "../../../../lib/social";
 
 // Daily social post. Vercel Cron calls this every morning (see vercel.json) with the CRON_SECRET.
 // Admin can open /api/social/post?dry=1 while logged in to preview today's texts without posting.
@@ -22,10 +22,12 @@ export async function GET(req: Request) {
     const image = cardUrl(item);
     if (dry || process.env.SOCIAL_PAUSED === "1" || !process.env.BUFFER_API_KEY) {
       const why = dry ? "preview" : process.env.SOCIAL_PAUSED === "1" ? "SOCIAL_PAUSED is 1" : "BUFFER_API_KEY is not set";
-      return NextResponse.json({ ok: true, posted: false, why, item, posts, image });
+      return NextResponse.json({ ok: true, posted: false, why, xToday: xPostsToday(), item, posts, image });
     }
 
-    const channels = (await bufferChannels()).filter((c) => c.service in SERVICES);
+    // X only on its days (Buffer free plan: 3 X posts a week); Threads and Instagram every day.
+    const xDay = xPostsToday();
+    const channels = (await bufferChannels()).filter((c) => c.service in SERVICES && (c.service !== "twitter" || xDay));
     const results = await Promise.all(
       channels.map(async (c) => {
         const key = SERVICES[c.service as keyof typeof SERVICES];
