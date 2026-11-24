@@ -69,7 +69,7 @@ export async function dailyItem(now = new Date()): Promise<DailyItem | null> {
 }
 
 export function postsFor(item: DailyItem) {
-  return buildPosts(item, item.subject, SITE) as { x: string; threads: string; instagram: string };
+  return buildPosts(item, item.subject, SITE, jstToday().day) as { x: string; threads: string; instagram: string };
 }
 
 /** Public URL of the news card image (JPEG, 1080×1350) for Instagram. */
