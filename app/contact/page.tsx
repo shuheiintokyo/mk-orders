@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ContactForm } from "../../components/ContactForm";
-import { SiteFooter, SiteHeader, SOCIAL } from "../../components/site";
+import { SiteFooter, SiteHeader } from "../../components/site";
 
 export const dynamic = "force-dynamic"; // reads WEB3FORMS_KEY at request time
 export const metadata: Metadata = { title: "お問い合わせ / Contact · MK Production" };
@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "お問い合わせ / Contact · MK P
 export default function Contact() {
   const key = process.env.WEB3FORMS_KEY;
   return (
-    <>
+    <div className="pop">
       <SiteHeader active="contact" />
       <main className="wrap narrow site">
         <a href="/" className="eyebrow" style={{ textDecoration: "none" }}>← ホーム / Home</a>
@@ -18,11 +18,8 @@ export default function Contact() {
         {key ? <ContactForm accessKey={key} /> : (
           <div className="callout"><span className="callout-icon" aria-hidden>🛠️</span><div><p>フォームは準備中です。今はSNSのDMからご連絡ください。<br />The form is not ready yet. Please send us a DM on social media for now.</p></div></div>
         )}
-        <div className="cols">
-          {SOCIAL.map((s) => <div key={s.name} className="col"><p><strong>{s.name}</strong>{"\n"}<a href={s.url} target="_blank" rel="noopener noreferrer">@mkproductionlab</a></p></div>)}
-        </div>
       </main>
       <SiteFooter />
-    </>
+    </div>
   );
 }
