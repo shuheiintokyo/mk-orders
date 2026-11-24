@@ -58,7 +58,7 @@ function Editor() {
       <main className="wrap narrow">
         <div className="page-head">
           <div>
-            <a href="/" className="eyebrow" style={{ textDecoration: "none" }}>← All orders</a>
+            <a href="/orders" className="eyebrow" style={{ textDecoration: "none" }}>← All orders</a>
             <h1>{id ? (o.title || "Untitled") : "New order"}</h1>
             {id && <div className="row" style={{ marginTop: 6 }}><span className="id">MK-{o.number}</span><StatusPill status={(o.status ?? "Estimate") as Status} /></div>}
           </div>
