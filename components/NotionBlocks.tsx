@@ -7,6 +7,8 @@ export type LinkMap = Record<string, string>;
 function href(url: string, links: LinkMap) {
   const id = url.replace(/-/g, "").match(/[0-9a-f]{32}/)?.[0];
   if (id && links[id]) return `/news/${links[id]}`;
+  const own = url.match(/^https?:\/\/(?:www\.)?mkproductionlab\.com(\/.*)?$/);
+  if (own) return own[1] || "/"; // links to this site stay in the same tab
   if (url.startsWith("/")) return null; // a Notion page that is not public: show text only
   return url;
 }

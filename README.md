@@ -4,6 +4,7 @@ Public website and admin web app for MK Production. Orders live in the Notion da
 
 - `/` public front page, read from the Notion page **MK Production · News Watch** (no login)
 - `/news/<subject>` one news subject page per child page linked on the hub (no login). Grey callouts and toggles in Notion are treated as internal and never shown. Pages re-read Notion at most every 30 minutes.
+- `/contact` public contact form. Messages go by email through Web3Forms (free); set `WEB3FORMS_KEY` in Vercel. Without a key the page asks visitors to use social media DMs.
 - `/orders` order list with status tabs, unpaid total and files-to-delete count (admin)
 - `/order` create or edit an order, with the live suggested quote
 - `/kobe` mobile to do list for Kobe (Japanese), one button per step
