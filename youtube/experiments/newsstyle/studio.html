@@ -63,27 +63,27 @@ canvas{position:absolute;inset:0}
 import * as THREE from 'three';
 const W=1920,H=1080;
 const R=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,preserveDrawingBuffer:true});
-R.setSize(W,H,false); R.toneMapping=THREE.ACESFilmicToneMapping; R.toneMappingExposure=1.05; R.shadowMap.enabled=true;
-const S=new THREE.Scene(); S.background=new THREE.Color(0x07060c); S.fog=new THREE.Fog(0x07060c,14,30);
+R.setSize(W,H,false); R.toneMapping=THREE.ACESFilmicToneMapping; R.toneMappingExposure=1.1; R.shadowMap.enabled=true;
+const S=new THREE.Scene(); S.background=new THREE.Color(0x1a1526); S.fog=new THREE.Fog(0x1a1526,16,34);
 const cam=new THREE.PerspectiveCamera(35,W/H,.1,100);
 const M=(c,o={})=>new THREE.MeshStandardMaterial({color:c,roughness:.6,metalness:.05,...o});
 const add=(g,m,p=[0,0,0],r=[0,0,0],sh=true)=>{const x=new THREE.Mesh(g,m);x.position.set(...p);x.rotation.set(...r);x.castShadow=sh;x.receiveShadow=true;S.add(x);return x;};
 
 // --- studio set ---
-add(new THREE.PlaneGeometry(60,60),M(0x0d0b14,{roughness:.25,metalness:.4}),[0,0,0],[-Math.PI/2,0,0],false);
+add(new THREE.PlaneGeometry(60,60),M(0x2a2338,{roughness:.3,metalness:.3}),[0,0,0],[-Math.PI/2,0,0],false);
 const ring=add(new THREE.RingGeometry(5.2,5.35,96),new THREE.MeshBasicMaterial({color:0xFF8A3D}),[0,.01,0],[-Math.PI/2,0,0],false);
-add(new THREE.CircleGeometry(5.2,96),M(0x15121e,{roughness:.35,metalness:.3}),[0,.005,0],[-Math.PI/2,0,0],false);
+add(new THREE.CircleGeometry(5.2,96),M(0x3a3150,{roughness:.3,metalness:.25}),[0,.005,0],[-Math.PI/2,0,0],false);
 // LED wall with live canvas texture
 const wc=document.createElement('canvas'); wc.width=2048; wc.height=640; const wx=wc.getContext('2d');
 const wt=new THREE.CanvasTexture(wc); wt.colorSpace=THREE.SRGBColorSpace;
 add(new THREE.PlaneGeometry(16,5),new THREE.MeshBasicMaterial({map:wt}),[0,3.3,-5.5],[0,0,0],false);
-add(new THREE.BoxGeometry(16.4,5.4,.2),M(0x111018),[0,3.3,-5.62]);
+add(new THREE.BoxGeometry(16.4,5.4,.2),M(0x2a2436),[0,3.3,-5.62]);
 // side light columns
-for(const x of [-9.5,-7.6,7.6,9.5]){ add(new THREE.BoxGeometry(.5,6,.5),M(0x16141f),[x,3,-4.4]); add(new THREE.BoxGeometry(.08,5.6,.52),new THREE.MeshBasicMaterial({color:x<0?0xFF8A3D:0xC04BD8}),[x+(x<0?.26:-.26),3,-4.4],[0,0,0],false); }
+for(const x of [-9.5,-7.6,7.6,9.5]){ add(new THREE.BoxGeometry(.5,6,.5),M(0x2c2638),[x,3,-4.4]); add(new THREE.BoxGeometry(.08,5.6,.52),new THREE.MeshBasicMaterial({color:x<0?0xFF8A3D:0xC04BD8}),[x+(x<0?.26:-.26),3,-4.4],[0,0,0],false); }
 // ceiling rig
 for(let i=-6;i<=6;i++) add(new THREE.BoxGeometry(.6,.08,.3),new THREE.MeshBasicMaterial({color:0xfff2dd}),[i*1.2,7.2,-2],[0,0,0],false);
 // anchor desk: solid front panel, white top, glowing strip, logo panel
-add(new THREE.BoxGeometry(4.6,1.1,1.0),M(0x1b1726,{roughness:.3,metalness:.45}),[0,.55,.75]);
+add(new THREE.BoxGeometry(4.6,1.1,1.0),M(0x2e2840,{roughness:.35,metalness:.3}),[0,.55,.75]);
 add(new THREE.BoxGeometry(4.8,.07,1.25),M(0xeae6f0,{roughness:.2,metalness:.1}),[0,1.12,.7]);
 add(new THREE.BoxGeometry(4.62,.05,.02),new THREE.MeshBasicMaterial({color:0xFF5C7A}),[0,.3,1.26],[0,0,0],false);
 // desk logo panel
@@ -94,46 +94,154 @@ lx.fillText('MK  BEHIND THE HEADLINES'.slice(0,2),256,84);
 const lt=new THREE.CanvasTexture(lc); lt.colorSpace=THREE.SRGBColorSpace;
 add(new THREE.PlaneGeometry(1.1,.34),new THREE.MeshBasicMaterial({map:lt}),[0,.72,1.27],[0,0,0],false);
 
-// --- anchors (stylised, built from simple shapes; not modelled on any real person) ---
+// --- anchors: anime-style toon characters built from simple shapes (not modelled on any real person) ---
+const GRAD=(()=>{const d=new Uint8Array([150,150,150,255, 215,215,215,255, 255,255,255,255]); const t=new THREE.DataTexture(d,3,1); t.minFilter=t.magFilter=THREE.NearestFilter; t.needsUpdate=true; return t;})();
+const T=(c,o={})=>new THREE.MeshToonMaterial({color:c,gradientMap:GRAD,...o});
+const INK=new THREE.MeshBasicMaterial({color:0x241a2a,side:THREE.BackSide});
+// hash-based pseudo random, deterministic per time slot
+const hash=n=>{const x=Math.sin(n*127.1+311.7)*43758.5453; return x-Math.floor(x);};
 function anchor(o){
   const g=new THREE.Group(); S.add(g); g.position.set(...o.pos);
-  const skin=M(o.skin,{roughness:.55}), suit=M(o.suit,{roughness:.7}), hair=M(o.hair,{roughness:.8}), dark=M(0x1a1420,{roughness:.4});
-  const part=(geo,mat,p,r=[0,0,0],s=[1,1,1],parent=g)=>{const m=new THREE.Mesh(geo,mat);m.position.set(...p);m.rotation.set(...r);m.scale.set(...s);m.castShadow=true;parent.add(m);return m;};
-  part(new THREE.CapsuleGeometry(.42,.7,8,24),suit,[0,1.25,0],[0,0,0],[1.25,1,.75]);
-  part(new THREE.CylinderGeometry(.16,.18,.25,24),skin,[0,1.92,0]);
-  part(new THREE.ConeGeometry(.17,.42,24),M(o.shirt),[0,1.68,.3],[Math.PI,0,0],[1,1,.35]);
-  if(o.tie) part(new THREE.BoxGeometry(.09,.36,.04),M(o.tie),[0,1.6,.33]);
-  // arms resting on the desk
-  for(const s of [-1,1]){ part(new THREE.CapsuleGeometry(.13,.55,6,16),suit,[s*.56,1.25,.25],[1.1,0,s*.25]); part(new THREE.SphereGeometry(.11,16,12),skin,[s*.42,1.12,.62]); }
-  const head=new THREE.Group(); head.position.set(0,2.32,0); g.add(head);
-  part(new THREE.SphereGeometry(.34,32,24),skin,[0,0,0],[0,0,0],[.92,1.08,.95],head);
-  o.hairFn(part,hair,head);
-  const eyes=[-1,1].map(s=>part(new THREE.SphereGeometry(.045,16,12),dark,[s*.12,.05,.3],[0,0,0],[1,1,.6],head));
-  [-1,1].forEach(s=>part(new THREE.BoxGeometry(.11,.022,.02),hair,[s*.12,.15,.31],[0,0,-s*.12],[1,1,1],head));
-  const mouth=part(new THREE.SphereGeometry(.07,20,12),M(0x5a1e2a),[0,-.15,.29],[0,0,0],[1.1,.15,.4],head);
-  part(new THREE.SphereGeometry(.035,12,8),skin,[0,-.02,.33],[0,0,0],[1,1.2,1],head); // nose
-  return {g,head,eyes,mouth,base:o.pos.slice()};
+  const skin=T(o.skin), suit=T(o.suit), hair=T(o.hair), shirt=T(o.shirt);
+  const part=(geo,mat,p,r=[0,0,0],s=[1,1,1],parent=g,line=.025)=>{const m=new THREE.Mesh(geo,mat);m.position.set(...p);m.rotation.set(...r);m.scale.set(...s);m.castShadow=true;m.receiveShadow=true;parent.add(m);
+    if(line){const h=new THREE.Mesh(geo,INK);h.scale.setScalar(1+line/ (geo.boundingSphere||(geo.computeBoundingSphere(),geo.boundingSphere)).radius);m.add(h);} return m;};
+  const body=new THREE.Group(); g.add(body);
+  part(new THREE.CapsuleGeometry(.36,.6,8,24),suit,[0,1.25,0],[0,0,0],[1.3,1,.72],body);
+  // shirt V and lapels
+  part(new THREE.ConeGeometry(.15,.4,24),shirt,[0,1.68,.26],[Math.PI,0,0],[1,1,.3],body,0);
+  if(o.tie) part(new THREE.BoxGeometry(.075,.34,.03),T(o.tie),[0,1.6,.29],[0,0,0],[1,1,1],body,0);
+  if(o.necklace) part(new THREE.TorusGeometry(.12,.012,8,32,Math.PI),T(0xffe7a0),[0,1.82,.2],[0,0,Math.PI],[1,.9,1],body,0);
+  const neck=part(new THREE.CylinderGeometry(.11,.12,.26,24),skin,[0,1.9,0],[0,0,0],[1,1,1],body,.012);
+  // arms with shoulder pivots so the hands can gesture
+  const arms=[-1,1].map(s=>{const sh=new THREE.Group(); sh.position.set(s*.47,1.62,.02); body.add(sh);
+    part(new THREE.CapsuleGeometry(.11,.42,6,16),suit,[0,-.28,0],[0,0,0],[1,1,1],sh);
+    const el=new THREE.Group(); el.position.set(0,-.55,0); sh.add(el);
+    part(new THREE.CapsuleGeometry(.1,.36,6,16),suit,[0,0,.24],[Math.PI/2,0,0],[1,1,1],el);
+    part(new THREE.SphereGeometry(.085,16,12),skin,[0,0,.5],[0,0,0],[1,.8,1.15],el,.012);
+    sh.rotation.set(-.15,0,s*.12); el.rotation.set(0,s*-.35,0); return {sh,el,s};});
+  // head: skull (toon sphere) + face decal (drawn each frame on a canvas)
+  const head=new THREE.Group(); head.position.set(0,2.3,0); body.add(head);
+  const skull=new THREE.Group(); skull.scale.set(.94,1.02,.92); head.add(skull);
+  part(new THREE.SphereGeometry(.34,40,30),skin,[0,0,0],[0,0,0],[1,1,1],skull,.018);
+  for(const s of [-1,1]) part(new THREE.SphereGeometry(.06,12,10),skin,[s*.32,-.02,-.02],[0,0,0],[.5,1,.8],skull,.01); // ears
+  const fc=document.createElement('canvas'); fc.width=1024; fc.height=740; const fx=fc.getContext('2d');
+  const ft=new THREE.CanvasTexture(fc); ft.colorSpace=THREE.SRGBColorSpace; ft.anisotropy=4;
+  const face=new THREE.Mesh(new THREE.SphereGeometry(.343,48,32,Math.PI/2-.9,1.8,.95,1.3),new THREE.MeshBasicMaterial({map:ft,transparent:true,depthWrite:false})); skull.add(face);
+  o.hairFn(part,hair,skull);
+  return {g,body,head,arms,fx,ft,o,base:o.pos.slice()};
 }
-const mia=anchor({pos:[-1.05,-.15,.05],skin:0xf1c7a6,suit:0xE0634F,shirt:0xfff4ea,hair:0x3b2620,
-  hairFn:(p,m,h)=>{p(new THREE.SphereGeometry(.37,32,24,0,Math.PI*2,0,Math.PI*.55),m,[0,.04,-.02],[-.25,0,0],[1,1.05,1.02],h);
-    p(new THREE.CylinderGeometry(.36,.3,.5,32,1,true,Math.PI*.55,Math.PI*.9),m,[0,-.12,-.02],[0,0,0],[1,1,1],h);}});
-const ken=anchor({pos:[1.05,-.15,.05],skin:0xd9a882,suit:0x22305a,shirt:0xf3f6fb,tie:0xFF8A3D,hair:0x1c1714,
-  hairFn:(p,m,h)=>{p(new THREE.SphereGeometry(.36,32,24,0,Math.PI*2,0,Math.PI*.42),m,[0,.06,-.03],[-.35,0,0],[1,1,1.02],h);}});
-mia.g.rotation.y=.22; ken.g.rotation.y=-.22;
+// face painter: big anime eyes with highlights, brows, small nose, mouth shape from the voice
+function paintFace(a,st){
+  const x=a.fx, o=a.o; x.clearRect(0,0,1024,740);
+  const cx=512, ey=390, dx=205;
+  // cheeks
+  x.fillStyle='rgba(255,120,130,.28)'; for(const s of [-1,1]){x.beginPath();x.ellipse(cx+s*300,505,70,34,0,0,7);x.fill();}
+  for(const s of [-1,1]){
+    const ex=cx+s*dx, open=st.blink; // 1 open .. 0 closed
+    const h=o.eyeH*open, w=o.eyeW;
+    if(open>.12){
+      x.save(); x.beginPath(); x.ellipse(ex,ey,w,h,0,0,7); x.clip();
+      x.fillStyle='#fff'; x.fillRect(ex-w,ey-h,2*w,2*h);
+      const ix=ex+st.gx*22, iy=ey+st.gy*14+6;
+      const ig=x.createLinearGradient(0,iy-o.eyeH,0,iy+o.eyeH); ig.addColorStop(0,o.iris[0]); ig.addColorStop(1,o.iris[1]);
+      x.fillStyle=ig; x.beginPath(); x.ellipse(ix,iy,w*.78,o.eyeH*.92,0,0,7); x.fill();
+      x.fillStyle='#1b1022'; x.beginPath(); x.ellipse(ix,iy+4,w*.36,o.eyeH*.45,0,0,7); x.fill();
+      x.fillStyle='#fff'; x.beginPath(); x.ellipse(ix-w*.3,iy-o.eyeH*.38,w*.22,o.eyeH*.18,-.4,0,7); x.fill();
+      x.globalAlpha=.8; x.beginPath(); x.arc(ix+w*.3,iy+o.eyeH*.35,w*.1,0,7); x.fill(); x.globalAlpha=1;
+      x.restore();
+    }
+    // upper lash line follows the lid
+    x.strokeStyle='#22151f'; x.lineCap='round'; x.lineWidth=16;
+    x.beginPath(); x.ellipse(ex,ey,w+6,Math.max(h,6)+4,0,Math.PI*1.08,Math.PI*1.92); x.stroke();
+    if(o.lashes){x.lineWidth=10; x.beginPath(); x.moveTo(ex+s*(w+2),ey-Math.max(h,6)*.5); x.lineTo(ex+s*(w+26),ey-Math.max(h,6)*.5-18); x.stroke();}
+    if(open<=.12){x.lineWidth=12; x.beginPath(); x.ellipse(ex,ey-4,w,14,0,.15,Math.PI-.15); x.stroke();}
+    // brow (raises a little when talking or surprised)
+    x.strokeStyle=o.brow; x.lineWidth=o.browW; const by=ey-o.eyeH-34-st.brow*16;
+    x.beginPath(); x.moveTo(ex-s*w*.9,by+8); x.quadraticCurveTo(ex,by-10,ex+s*w*.9,by+4+s*0); x.stroke();
+  }
+  // nose
+  x.strokeStyle='rgba(150,80,70,.75)'; x.lineWidth=6; x.beginPath(); x.moveTo(cx+4,500); x.lineTo(cx-8,525); x.stroke();
+  // mouth: closed smile .. open rounded shape
+  const m=st.mouth, mw=44+34*st.wide, mh=8+80*m, my=600;
+  if(m<.06){ x.strokeStyle='#7a2c3a'; x.lineWidth=8; x.beginPath(); x.moveTo(cx-34,my-4); x.quadraticCurveTo(cx,my+12+st.smile*8,cx+34,my-4); x.stroke(); }
+  else { x.fillStyle='#6b1e30'; x.beginPath(); x.moveTo(cx-mw,my-6); x.quadraticCurveTo(cx,my-14,cx+mw,my-6); x.quadraticCurveTo(cx+mw*.8,my+mh,cx,my+mh); x.quadraticCurveTo(cx-mw*.8,my+mh,cx-mw,my-6); x.fill();
+    x.fillStyle='#e8737f'; x.beginPath(); x.ellipse(cx,my+mh*.72,mw*.5,mh*.22,0,0,7); x.fill();
+    x.strokeStyle='#4a1422'; x.lineWidth=5; x.stroke(); }
+  a.ft.needsUpdate=true;
+}
+const mia=anchor({pos:[-1.05,-.15,.05],skin:0xf3c2a2,suit:0xEE6E58,shirt:0xfff7ef,hair:0x5a3328,necklace:true,
+  eyeW:105,eyeH:130,iris:['#7a3d2a','#e09a52'],lashes:true,brow:'#5a3328',browW:10,
+  hairFn:(p,m,h)=>{
+    const sh=new THREE.MeshToonMaterial({color:m.color,gradientMap:GRAD,side:THREE.DoubleSide});
+    p(new THREE.SphereGeometry(.37,32,24,0,Math.PI*2,0,Math.PI*.42),m,[0,.02,-.02],[-.45,0,0],[1.04,1.05,1.06],h,.016); // crown, tilted back
+    p(new THREE.SphereGeometry(.362,40,20,Math.PI/2-1.25,2.5,.2,1.12),sh,[0,0,0],[0,0,0],[1.03,1.03,1.05],h,0); // fringe down to the brows
+    for(let i=-2;i<=2;i++) p(new THREE.ConeGeometry(.07,.16,8),sh,[i*.1,.11-Math.abs(i)*.012,.33-Math.abs(i)*.04],[Math.PI-.25,0,i*.08],[1,1,.35],h,0);
+    for(const s of [-1,1]) p(new THREE.CapsuleGeometry(.085,.5,6,12),m,[s*.31,-.24,.04],[0.06,0,s*.08],[1,1,.6],h,.012);
+    p(new THREE.CapsuleGeometry(.31,.35,8,16),m,[0,-.2,-.15],[.12,0,0],[1.1,1,.65],h,.015);
+  }});
+const ken=anchor({pos:[1.05,-.15,.05],skin:0xe9b892,suit:0x26386b,shirt:0xf3f6fb,tie:0xFF8A3D,hair:0x2a2230,
+  eyeW:92,eyeH:108,iris:['#2c2a4a','#6f7fc0'],lashes:false,brow:'#2a2230',browW:16,
+  hairFn:(p,m,h)=>{
+    const sh=new THREE.MeshToonMaterial({color:m.color,gradientMap:GRAD,side:THREE.DoubleSide});
+    p(new THREE.SphereGeometry(.37,32,24,0,Math.PI*2,0,Math.PI*.46),m,[0,.03,-.03],[-.4,0,0],[1.04,1.05,1.06],h,.016);
+    p(new THREE.SphereGeometry(.36,40,20,Math.PI/2-1.3,2.6,.2,.98),sh,[0,0,0],[0,0,0],[1.04,1.04,1.06],h,0); // short fringe
+    for(let i=-2;i<=2;i++) p(new THREE.ConeGeometry(.09,.2,8),sh,[i*.1,.17-Math.abs(i)*.01,.3-Math.abs(i)*.045],[Math.PI-.5,0,.45+i*.04],[1,1,.35],h,0); // swept tips
+    for(let i=0;i<3;i++) p(new THREE.ConeGeometry(.11,.22,8),m,[-.14+i*.14,.36,-.04],[-.45,0,-.2+i*.2],[1,1,.6],h,0);
+  }});
+mia.g.rotation.y=.2; ken.g.rotation.y=-.2;
 
-// --- lights ---
-S.add(new THREE.HemisphereLight(0xbfb6ff,0x1a1020,.55));
-const key=new THREE.SpotLight(0xfff1e0,90,30,.5,.6); key.position.set(0,7,8); key.target.position.set(0,1.8,0); key.castShadow=true; S.add(key,key.target);
-const rimL=new THREE.PointLight(0xFF8A3D,30,12); rimL.position.set(-4,3,-2); S.add(rimL);
-const rimR=new THREE.PointLight(0xC04BD8,30,12); rimR.position.set(4,3,-2); S.add(rimR);
+// --- lights: news-style plot. Two soft front lights at ~35° (5 and 7 o'clock) act as key+fill,
+// a backlight above and behind each anchor, background kept a little darker than the anchors ---
+S.add(new THREE.HemisphereLight(0xf3eeff,0x3a3046,.75));
+for(const s of [-1,1]){ const k=new THREE.SpotLight(0xfff4e6,95,40,.55,1); k.position.set(s*5,5.2,7.5); k.target.position.set(0,1.9,0); if(s<0) {k.castShadow=true; k.shadow.mapSize.set(1024,1024); k.shadow.bias=-.0005;} S.add(k,k.target); }
+for(const a of [mia,ken]){ const b=new THREE.SpotLight(0xe9f0ff,70,12,.45,.8); b.position.set(a.base[0]*.6,6.2,-3.2); b.target.position.set(a.base[0],2.2,0); S.add(b,b.target); }
+const rimL=new THREE.PointLight(0xFF8A3D,22,10); rimL.position.set(-4,3,-2); S.add(rimL);
+const rimR=new THREE.PointLight(0xC04BD8,22,10); rimR.position.set(4,3,-2); S.add(rimR);
+const deskWash=new THREE.SpotLight(0xffffff,40,14,.6,1); deskWash.position.set(0,3,6); deskWash.target.position.set(0,.6,1); S.add(deskWash,deskWash.target);
+
+// --- motion helpers: everything is a function of time, smoothed by looking back a short window,
+// so any frame can be rendered on its own and movement still eases in and out ---
+const envAt=(id,t)=>{const f=Math.floor(t*TL.fps); return TL.mouth[id][f]||0;};
+const smoothBack=(fn,t,win=.35,n=10)=>{let s=0,w=0; for(let i=0;i<n;i++){const k=Math.exp(-i*3/n); s+=fn(t-i*win/n)*k; w+=k;} return s/w;};
+const talking=(id,t)=>smoothBack(tt=>envAt(id,tt)>.02?1:0,t,.6,12);
+function blinkAt(t,seed){ // irregular blinks every 2–5 s, sometimes a double blink, 150 ms each
+  let tb=0,i=0; let next=1+hash(seed)*2; while(next<t+.2&&i<40){ tb=next; next+=2+hash(seed+i*7.3)*3+(hash(seed+i*3.1)>.8?.0:0); i++; }
+  const d=t-tb; const dbl=hash(seed+i*5.7)>.82; const close=(u)=>u<0?1:u<.07?1-u/.07:u<.15?(u-.07)/.08:1;
+  return Math.min(close(d), dbl?close(d-.25):1);
+}
+function gazeAt(t,seed){ const k=Math.floor(t/1.3); const u=(t/1.3)-k; const e=u<.12?u/.12:1; // quick saccade, then hold
+  const a=[hash(seed+k)-.5,hash(seed+k+.5)-.5], b=[hash(seed+k-1)-.5,hash(seed+k-.5)-.5];
+  return [b[0]+(a[0]-b[0])*e, b[1]+(a[1]-b[1])*e]; }
+function animate(a,id,t,n){
+  const other=id==='A'?'B':'A';
+  const me=talking(id,t), them=talking(other,t);
+  const env=smoothBack(tt=>envAt(id,tt),t,.09,5); // ~40–80 ms attack/release on the mouth
+  const syl=Math.max(0,envAt(id,t)-smoothBack(tt=>envAt(id,tt),t,.25,8)); // syllable peaks
+  // breathing (~4 s), weight shift and sway
+  const br=Math.sin(2*Math.PI*t/(3.6+n*.5)+n);
+  a.body.position.y=.012*br; a.body.scale.set(1+.004*br,1+.006*br,1);
+  a.body.rotation.z=.015*Math.sin(t*.45+n*2)+.01*Math.sin(t*.27+n);
+  // head: face camera while talking, turn toward the partner while listening; nods on stressed syllables
+  const look=(id==='A'?1:-1)*.42*them*(1-me);
+  const nod=smoothBack(tt=>Math.max(0,envAt(id,tt)-smoothBack(q=>envAt(id,q),tt,.25,6)),t,.18,6);
+  a.head.rotation.y=look+.06*Math.sin(t*.6+n*3)+.04*me*Math.sin(t*1.7+n);
+  a.head.rotation.x=-.03+nod*.9+.025*Math.sin(t*.8+n)+.05*them*Math.max(0,Math.sin(t*2.2+n))*(hash(Math.floor(t/2)+n)>.5?1:0);
+  a.head.rotation.z=.035*Math.sin(t*.5+n*1.3)+(id==='A'?.04:-.03)*them;
+  // hands: open a little while explaining
+  a.arms.forEach(({sh,el,s},j)=>{ const g=me*(.5+.5*Math.sin(t*1.9+j*2+n))*(j===(id==='A'?1:0)?1:.4);
+    sh.rotation.x=-.15-.25*g; el.rotation.x=-.3*g-.08*Math.sin(t*3.1+j)*me; el.rotation.y=s*(-.35-.25*g); });
+  const gz=gazeAt(t,n*13+1); const toPartner=(id==='A'?1:-1)*them*(1-me);
+  paintFace(a,{blink:blinkAt(t,n*31+5),gx:gz[0]*.6*(1-them)+toPartner*.9,gy:gz[1]*.4,
+    mouth:Math.min(1,env*1.3),wide:.5+.5*Math.sin(t*9.7+n)*Math.min(1,env*2),brow:me*.4+syl*2,smile:1-me});
+}
 
 // --- LED wall content ---
 const HEAD={promo:'TONIGHT',msA:'',msB:'',ots:'',two:'',full:'APPROVAL FIRST',wide:'SEE YOU NEXT WEEK',sting:'BEHIND THE HEADLINES'};
 function drawWall(t,shot){
   const g=wx.createLinearGradient(0,0,2048,640); const k=(Math.sin(t*.3)+1)/2;
-  g.addColorStop(0,'#2a1238'); g.addColorStop(.5+.2*k,'#5a1f45'); g.addColorStop(1,'#1a0f2a');
+  g.addColorStop(0,'#3c1d55'); g.addColorStop(.5+.2*k,'#7a2d62'); g.addColorStop(1,'#2c1b48');
   wx.fillStyle=g; wx.fillRect(0,0,2048,640);
-  wx.strokeStyle='rgba(255,255,255,.08)'; wx.lineWidth=2;
+  wx.strokeStyle='rgba(255,255,255,.12)'; wx.lineWidth=2;
   for(let i=0;i<14;i++){ wx.beginPath(); for(let x=0;x<=2048;x+=32){ const y=320+i*18-120+40*Math.sin(x/220+t*.6+i); x?wx.lineTo(x,y):wx.moveTo(x,y);} wx.stroke(); }
   wx.fillStyle='#fff'; wx.font='900 120px N'; wx.textAlign='center'; wx.textBaseline='middle';
   wx.font='900 84px N'; if(shot!=='ots') wx.fillText(HEAD[shot]||'', 1024, 120);
@@ -153,28 +261,17 @@ const SHOT={
 };
 const ease=x=>x<0?0:x>1?1:1-Math.pow(1-x,3);
 let TL;
-window.init=tl=>{TL=tl;};
+window.init=tl=>{TL=tl; lx.fillStyle=lg; lx.fillRect(0,0,512,160); lx.fillStyle='#1a1020'; lx.font='900 92px N'; lx.fillText('MK',256,84); lt.needsUpdate=true;};
 window.render=t=>{
   const L=TL.lines; let i=L.findIndex(l=>t<l.end+ (l.sp==='-'?0:.35)); if(i<0) i=L.length-1;
   const l=L[i]; const shot=l.shot.startsWith('promo')?'promo':l.shot; const sh=SHOT[shot];
   const u=Math.min(1,(t-l.start)/Math.max(1,(l.end-l.start+.35)));
-  const k=shot==='sting'?ease(u):u;
+  const k=shot==='sting'?ease(u):(u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2);
   cam.position.set(sh.p[0]+sh.d[0]*k,sh.p[1]+sh.d[1]*k,sh.p[2]+sh.d[2]*k); cam.fov=sh.f; cam.updateProjectionMatrix();
   cam.lookAt(...sh.q);
   drawWall(t,shot);
   ring.material.color.setHSL((.07+.03*Math.sin(t)),1,.6);
-  // anchors: mouth from audio envelope, blinks, small head motion while talking
-  const f=Math.floor(t*TL.fps);
-  [['A',mia],['B',ken]].forEach(([id,a],n)=>{
-    const m=(TL.mouth[id][f]||0); a.mouth.scale.y=.15+1.6*m;
-    const blink=((t+n*1.7)%3.9)<.12; a.eyes.forEach(e=>e.scale.y=blink?.1:1);
-    const talk=TL.mouth[id].slice(Math.max(0,f-8),f+1).reduce((x,y)=>x+y,0)/9;
-    a.head.rotation.x=.04*Math.sin(t*2.1+n)*(.3+talk*3); a.head.rotation.y=.05*Math.sin(t*.7+n*2)+(id==='A'?.1:-.1)*(talk>0?0:1)*0;
-    a.head.rotation.z=.02*Math.sin(t*1.3+n);
-    // the listener turns toward the speaker
-    const other=TL.mouth[id==='A'?'B':'A'][f]>0.02;
-    a.head.rotation.y=(id==='A'?1:-1)*(other?.35:.0)+.04*Math.sin(t*.7+n);
-  });
+  animate(mia,'A',t,0); animate(ken,'B',t,1);
   R.render(S,cam);
   // overlays
   const $=id=>document.getElementById(id);
