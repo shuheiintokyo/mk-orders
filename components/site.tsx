@@ -19,7 +19,6 @@ export function SiteHeader({ active }: { active?: string }) {
           <a className={active === "home" ? "on" : ""} href="/">🏠 <span>ホーム</span></a>
           <a className={active === "news" ? "on" : ""} href="/#news">📰 <span>ニュース</span></a>
           <a className={active === "contact" ? "on" : ""} href="/contact">✉️ <span>お問い合わせ</span></a>
-          <a href="/orders" title="Production / order manager (login)">🔒 <span>制作管理</span></a>
         </nav>
       </div>
     </header>
@@ -51,9 +50,23 @@ export function SiteFooter() {
         </div>
         <p className="foot-note">💬 ご質問やコメントは各SNSのDMか<a href="/contact">お問い合わせフォーム</a>からどうぞ。このサイトは AI の機能を取り入れながら作っている途中のため、内容が意図どおりに表示されないことがあります。ご不便をおかけしたら申し訳ありません。<br />
           Questions or comments? Send a DM or use the <a href="/contact">contact form</a>. This site is still being built with AI features, so some content may not come out quite as intended. Sorry for any inconvenience.</p>
-        <p className="foot-links">© MK Production · <a href="/contact">お問い合わせ / Contact</a> · <a href="/orders">制作管理 / Production (login)</a></p>
+        <p className="foot-links">© MK Production · <a href="/contact">お問い合わせ / Contact</a></p>
       </div>
     </footer>
+  );
+}
+
+/** Print orders are not open yet: the printer has not arrived in Kobe. */
+export function NotOpenYet() {
+  return (
+    <div className="notice" role="note">
+      <span className="notice-icon" aria-hidden>🖨️</span>
+      <div>
+        <b>プリントのご依頼はまだ受け付けていません</b>
+        <span>神戸に置くプリンター（Formlabs Form Studio 1）の到着を待っているところです。届いて試し刷りが済んだら、ここと各SNSでお知らせします。ご相談やご質問はいつでも歓迎です。</span>
+        <em>Print orders aren&apos;t open yet. We&apos;re waiting for our printer (a Formlabs Form Studio 1) to arrive in Kobe, and we&apos;ll announce it here and on social media once it&apos;s set up and tested. Questions and ideas are welcome anytime.</em>
+      </div>
+    </div>
   );
 }
 

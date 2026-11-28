@@ -1,7 +1,7 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 
-export const metadata: Metadata = { title: "MK Orders", description: "MK Production order manager" };
+export const metadata: Metadata = { title: "MK Production", description: "3Dプリント・ものづくり・AI · MK Production" };
 export const viewport: Viewport = { width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

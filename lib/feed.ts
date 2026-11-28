@@ -4,7 +4,19 @@ import { parseItem, topicOf } from "./social-text";
 
 // News Watch pages turned into story cards: headline, Japanese summary and where it came from.
 
-export type Story = { id: string; date: string; headline: string; summary: string; source: string; url: string; domain: string };
+export type Lang = { code: string; ja: string };
+export type Story = { id: string; date: string; headline: string; summary: string; source: string; url: string; domain: string; lang: Lang | null };
+
+/** The language of the original article, guessed from its headline (the headline keeps the original wording). */
+export function langOf(headline: string): Lang | null {
+  const s = headline.replace(/[\s\d\p{P}\p{S}]/gu, "");
+  if (!s) return null;
+  if (/[\uac00-\ud7af]/.test(s)) return { code: "KO", ja: "韓国語" };
+  if (/[\u3040-\u30ff]/.test(s)) return { code: "JA", ja: "日本語" };
+  if (/[\u4e00-\u9fff]/.test(s)) return { code: "ZH", ja: "中国語" };
+  if (/[A-Za-z]/.test(s)) return { code: "EN", ja: "英語" };
+  return null;
+}
 export type Topic = { slug: string; title: string; icon: string; label: string; color: string; kind: "news" | "weekly" | "log"; stories: Story[]; blocks: Block[] };
 
 const COLORS = [
@@ -35,7 +47,7 @@ export function storiesOf(list: Block[]): Story[] {
     if (b.type === "heading_2") date = plain(b.data.rich_text).trim();
     else if (b.type === "bulleted_list_item" && date) {
       const p = parseItem(b.data.rich_text);
-      if (p.headline) out.push({ id: b.id, date, ...p, domain: domainOf(p.url) });
+      if (p.headline) out.push({ id: b.id, date, ...p, domain: domainOf(p.url), lang: langOf(p.headline) });
     }
   }
   return out;
