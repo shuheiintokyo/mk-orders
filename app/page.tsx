@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getTopics, latestWeek, notesOf, shortDate, type Topic } from "../lib/feed";
 import { PickCard, StoryRow } from "../components/stories";
-import { SiteError, SiteFooter, SiteHeader } from "../components/site";
+import { NotOpenYet, SiteError, SiteFooter, SiteHeader } from "../components/site";
 
 export const revalidate = 1800; // re-read Notion at most every 30 minutes
 export const metadata: Metadata = {
@@ -32,7 +32,7 @@ export default async function Home() {
         <div className="wrap">
           <span className="live"><i /> 毎日更新 · Updated daily{newest && <> · 最終更新 {shortDate(newest)}</>}</span>
           <h1>ものづくり × AI の<br />最新アップデート</h1>
-          <p className="hero-en">Fresh updates on 3D printing, making and AI‑assisted design. Every story has a short Japanese summary and a link to its source.</p>
+          <p className="hero-en">Fresh updates on 3D printing, making and AI‑assisted design. Every story has a Japanese summary, the language of the original article, and a link to read it on the source site.</p>
           <nav className="topic-chips" aria-label="トピック / Topics">
             {news.map((t) => <a key={t.slug} href={`#${t.slug}`} style={{ "--tc": t.color } as React.CSSProperties}>{t.icon} {t.label}<b>{t.stories.length}</b></a>)}
             {weekly && <a href={`/news/${weekly.slug}`} style={{ "--tc": weekly.color } as React.CSSProperties}>{weekly.icon} {weekly.label}</a>}
@@ -41,6 +41,7 @@ export default async function Home() {
       </section>
 
       <main className="wrap home" id="news">
+        <NotOpenYet />
         {picks.length > 0 && (
           <section>
             <div className="sec-head">
@@ -115,8 +116,8 @@ export default async function Home() {
         <section className="cta-row">
           <a className="cta" href="/contact" style={{ "--tc": "#FF5C7A" } as React.CSSProperties}>
             <span className="cta-icon">💬</span>
-            <b>相談・プリントのご依頼</b>
-            <span>作りたいもの、材料のことなど気軽にどうぞ。Formlabs で造形して国内発送します。<br /><em>Talk to us about a print or a material.</em></span>
+            <b>ご相談・お問い合わせ</b>
+            <span>作りたいもの、材料のことなど気軽にどうぞ。プリントのご依頼は、プリンターが届いて準備が整いしだい受け付けを始めます（国内発送）。<br /><em>Tell us what you&apos;d like to make or ask about materials. We&apos;ll start taking print orders (shipping within Japan) once our printer is set up.</em></span>
             <span className="more">お問い合わせ →</span>
           </a>
         </section>
