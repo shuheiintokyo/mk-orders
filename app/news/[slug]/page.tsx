@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getHub, getSubPage } from "../../../lib/news";
-import { colorOf, shortDate, storiesOf } from "../../../lib/feed";
+import { colorOf, shortDate, storiesOf, withVideos } from "../../../lib/feed";
+import { getEpisodes } from "../../../lib/youtube";
 import { StoryRow } from "../../../components/stories";
 import { Blocks } from "../../../components/NotionBlocks";
 import { SiteError, SiteFooter, SiteHeader } from "../../../components/site";
@@ -25,7 +26,7 @@ export default async function NewsPage({ params }: Props) {
   if (!page) notFound();
   const links = Object.fromEntries(hub.pages.map((p) => [p.id, p.slug]));
   // News subjects show story cards grouped by day; the weekly roundup and the events log keep their Notion layout.
-  const stories = /week|roundup|event|log|learn/i.test(page.title) ? [] : storiesOf(page.blocks);
+  const stories = /week|roundup|event|log|learn/i.test(page.title) ? [] : withVideos(storiesOf(page.blocks), await getEpisodes());
   const days = [...new Set(stories.map((s) => s.date))];
   const intro = page.blocks.slice(0, Math.max(0, page.blocks.findIndex((b) => b.type === "heading_2")));
   return (

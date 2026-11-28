@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { getTopics, latestWeek, notesOf, shortDate, topPick, type Topic } from "../lib/feed";
+import { getTopics, latestWeek, notesOf, shortDate, topPick, withVideos, type Topic } from "../lib/feed";
+import { getEpisodes, YOUTUBE_URL, type Episode } from "../lib/youtube";
 import { PickCard, StoryRow } from "../components/stories";
 import { SiteError, SiteFooter, SiteHeader } from "../components/site";
 
@@ -11,12 +12,13 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   let topics: Topic[];
+  let episodes: Episode[] = [];
   try {
-    topics = await getTopics();
+    [topics, episodes] = await Promise.all([getTopics(), getEpisodes()]);
   } catch (e) {
     return (<div className="pop"><SiteHeader active="home" /><main className="wrap narrow"><SiteError message={(e as Error).message} /></main></div>);
   }
-  const news = topics.filter((t) => t.kind === "news");
+  const news = topics.filter((t) => t.kind === "news").map((t) => ({ ...t, stories: withVideos(t.stories, episodes) }));
   const weekly = topics.find((t) => t.kind === "weekly");
   const log = topics.find((t) => t.kind === "log");
   const week = weekly ? latestWeek(weekly.blocks) : null;
@@ -50,6 +52,31 @@ export default async function Home() {
             <div className="picks">{picks.map(({ s, t }) => <PickCard key={s.id} s={s} t={t} />)}</div>
           </section>
         )}
+
+        <section>
+          <div className="sec-head">
+            <h2>ニュースの裏側 <span>Behind the Headlines</span></h2>
+            <p>ニュースをひとつ選んで、しくみをやさしく動画で解説 · One story, the idea behind it, in a few minutes</p>
+          </div>
+          {episodes.length ? (
+            <div className="yt-list">
+              {episodes.slice(0, 3).map((v) => (
+                <a key={v.id} className="yt-card" href={v.url} target="_blank" rel="noopener noreferrer">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={v.thumb} alt="" loading="lazy" />
+                  <b>{v.title}</b>
+                  <small>{v.published.slice(0, 10)} · YouTube ↗</small>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <a className="yt-empty" href={YOUTUBE_URL} target="_blank" rel="noopener noreferrer">
+              <span className="yt-play" aria-hidden>▶</span>
+              <span><b>YouTube で解説動画をはじめました</b><br />英語ナレーション＋日本語字幕で、ニュースの背景を3〜5分で解説します。<br /><em>Short explainers in English with Japanese subtitles. Subscribe on YouTube →</em></span>
+            </a>
+          )}
+          {episodes.length > 0 && <a className="see-all" href={YOUTUBE_URL} target="_blank" rel="noopener noreferrer" style={{ "--tc": "#E5322D" } as React.CSSProperties}>YouTubeチャンネルを見る / Visit the channel →</a>}
+        </section>
 
         <section className="notes" style={{ "--tc": "#20B486" } as React.CSSProperties}>
           <div className="sec-head">

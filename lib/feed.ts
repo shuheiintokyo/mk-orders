@@ -1,11 +1,12 @@
 import "server-only";
 import { getHub, getSubPage, plain, type Block } from "./news";
 import { isCommentary, parseItem, topicOf } from "./social-text";
+import { matchEpisode } from "./episodes";
 
 // News Watch pages turned into story cards: headline, Japanese summary and where it came from.
 
 export type Lang = { code: string; ja: string };
-export type Story = { id: string; date: string; headline: string; summary: string; source: string; url: string; domain: string; lang: Lang | null; sources: number };
+export type Story = { id: string; date: string; headline: string; summary: string; source: string; url: string; domain: string; lang: Lang | null; sources: number; video?: { url: string; title: string } };
 
 /** The language of the original article, guessed from its headline (the headline keeps the original wording). */
 export function langOf(headline: string): Lang | null {
@@ -37,6 +38,15 @@ function domainOf(url: string) {
   } catch {
     return "";
   }
+}
+
+/** Mark each story that a YouTube episode explains ("watch the deep dive"). */
+export function withVideos(stories: Story[], episodes: { url: string; title: string; description: string }[]): Story[] {
+  if (!episodes.length) return stories;
+  return stories.map((s) => {
+    const v = matchEpisode(s, episodes);
+    return v ? { ...s, video: { url: v.url, title: v.title } } : s;
+  });
 }
 
 /** The day's pick for a topic: from the newest day, the story the most outlets covered (ties: listed first). */

@@ -465,3 +465,23 @@ tr.click:hover td { background: var(--surface-2); }
 .note-meta { font-size: var(--fs-xs); font-weight: var(--fw-bold); color: #20B486; }
 .pop .site-foot .sns-btn { color: #2A2140; }
 @media (prefers-color-scheme: dark) { .notice { background: #33290F; color: #FFE7A8; border-color: #8A6A1C; } }
+
+/* Whole card is a link (stretched), other links stay clickable on top */
+.pick, .story-row { position: relative; }
+.stretch { color: inherit; text-decoration: none; }
+.stretch::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+.pick .deep, .story-row .deep, .pick .src, .story-row .src { position: relative; z-index: 1; }
+.deep { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-sm); font-weight: var(--fw-bold); color: #fff; background: #E5322D; border-radius: var(--r-pill); padding: 4px 12px; text-decoration: none; }
+.deep small { font-weight: var(--fw-bold); opacity: .85; font-size: 10px; }
+.deep:hover { filter: brightness(1.08); }
+
+/* Behind the Headlines (YouTube) */
+.yt-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--sp-4); }
+.yt-card { display: flex; flex-direction: column; text-decoration: none; color: inherit; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-1); transition: transform var(--dur) var(--ease); }
+.yt-card:hover { transform: translateY(-3px); }
+.yt-card img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; background: #222; }
+.yt-card b { padding: var(--sp-3) var(--sp-4) 0; font-size: var(--fs-sm); line-height: 1.45; }
+.yt-card small { padding: 4px var(--sp-4) var(--sp-4); color: var(--muted); font-size: var(--fs-xs); }
+.yt-empty { display: flex; gap: var(--sp-3); align-items: center; background: var(--surface); border: 2px dashed #E5322D55; border-radius: 20px; padding: var(--sp-4) var(--sp-5); text-decoration: none; color: inherit; }
+.yt-empty .yt-play { flex: none; width: 48px; height: 34px; border-radius: 10px; background: #E5322D; color: #fff; display: grid; place-items: center; font-size: 16px; }
+.yt-empty span { font-size: var(--fs-sm); color: var(--ink-2); line-height: 1.55; }
