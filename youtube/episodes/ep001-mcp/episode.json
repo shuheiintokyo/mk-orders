@@ -7,9 +7,10 @@
   "title": "MCP: how AI plugs into your apps",
   "title_ja": "MCP：AIがアプリにつながるしくみ",
   "news": {
-    "headline": "Google Will Make AI Agents Use Its MCP Servers. The Gmail One Can't Send Email",
-    "source": "techstackups",
-    "url": "https://techstackups.com/articles/google-workspace-ai-agents-mcp/",
+    "headline": "Configure the Google Workspace MCP servers (Gmail MCP server)",
+    "source": "Google Workspace developer docs",
+    "url": "https://developers.google.com/workspace/gmail/api/guides/configure-mcp-server",
+    "also": "techstackups report (2026-11-28) claimed the Gmail server can't send; Google's docs list send_message with user approval",
     "found_in": "News Watch · Generative AI dev · 2026-11-28"
   },
   "speakers": {
@@ -33,31 +34,31 @@
       "kind": "headline",
       "chapter": "News",
       "kicker": "This week's update · 今週のアップデート",
-      "headline": "Google wants AI agents in Workspace to use its own MCP servers",
-      "headline_ja": "GoogleはWorkspaceのAIエージェントに自社MCPサーバーを使わせる方針",
-      "twist": "…but the Gmail one can't send email.",
-      "twist_ja": "…しかしGmail用はメールを送れない",
-      "twist_at": 1,
-      "source": "Reported by techstackups",
+      "headline": "Google offers official MCP servers for Gmail, Calendar and Drive",
+      "headline_ja": "GoogleがGmail・カレンダー・ドライブ向けの公式MCPサーバーを提供",
+      "twist": "…and sending an email needs your OK.",
+      "twist_ja": "…ただしメール送信にはあなたの承認が必要",
+      "twist_at": 2,
+      "source": "Source: Google Workspace developer docs",
       "lines": [
         {
           "sp": "A",
-          "en": "This week there was a report that Google wants AI agents in Workspace to go through its own MCP servers.",
-          "ja": "今週、GoogleがWorkspaceのAIエージェントに自社のMCPサーバーを使わせる方針だと報じられました。"
+          "en": "Google now offers official MCP servers for Gmail, Calendar, Drive and more, so AI agents can work with your Workspace data.",
+          "ja": "Googleは、Gmail・カレンダー・ドライブなどの公式MCPサーバーを提供し、AIエージェントがWorkspaceのデータを扱えるようにしています。"
         },
         {
           "sp": "B",
-          "en": "Okay. And the Gmail one apparently can't even send an email?",
-          "ja": "なるほど。しかもGmail用のものは、メールを送れないらしいですね？"
+          "en": "One report even said the Gmail one can't send email. Is that true?",
+          "ja": "Gmail用はメールを送れない、という記事もありましたよね。本当ですか？"
         },
         {
           "sp": "A",
-          "en": "Right. Which sounds strange, until you know what MCP actually is.",
-          "ja": "そうなんです。MCPが何かを知るまでは、不思議に聞こえますよね。"
+          "en": "Not quite. Google's own docs say it can send, but only after you approve it. To see why, we need to know what MCP is.",
+          "ja": "少し違います。公式ドキュメントでは送信できますが、あなたの承認が必要です。理由を知るには、まずMCPを理解しましょう。"
         },
         {
           "sp": "B",
-          "en": "So let's fix that. What is it?",
+          "en": "So let's start there. What is it?",
           "ja": "じゃあ、そこから。MCPって何ですか？"
         }
       ]
@@ -257,7 +258,7 @@
     },
     {
       "kind": "switches",
-      "chapter": "Why no send?",
+      "chapter": "Why ask first?",
       "heading": "The menu sets what AI may do",
       "heading_ja": "メニューがAIにできることを決める",
       "items": [
@@ -277,39 +278,39 @@
         },
         {
           "icon": "mail",
-          "label": "Send in your name",
-          "label_ja": "あなたの名前で送信",
+          "label": "Send on its own",
+          "label_ja": "AIが勝手に送信",
           "on": false,
           "at": 2
         }
       ],
-      "human": "You press send · 送信ボタンは人が押す",
+      "human": "You approve each send · 送信はあなたが承認",
       "human_at": 2,
       "lines": [
         {
           "sp": "B",
-          "en": "Then why would Google ship a Gmail server that can't send?",
-          "ja": "では、なぜGoogleは送信できないGmail用サーバーを出すんでしょう？"
+          "en": "So why does sending need my approval?",
+          "ja": "では、なぜ送信には私の承認が必要なんですか？"
         },
         {
           "sp": "A",
-          "en": "Because the menu decides what the AI is allowed to do. Reading mail is low risk. Sending it in your name is not.",
-          "ja": "メニューが、AIに許される範囲を決めるからです。メールを読むのは低リスク。でも、あなたの名前で送るのは別です。"
+          "en": "Because the server decides what the AI may do on its own. Reading mail is low risk. Sending it in your name is not.",
+          "ja": "AIが単独でできることは、サーバーが決めているからです。読むのは低リスク。でも、あなたの名前で送るのは別です。"
         },
         {
           "sp": "A",
-          "en": "Leaving out send keeps a person in the loop. The AI can draft, and you press the button.",
-          "ja": "「送信」を外せば、必ず人が関わります。AIは下書きまで、送るボタンはあなたが押します。"
+          "en": "So Google asks you first. The AI can draft a reply, and nothing goes out until you say yes.",
+          "ja": "だから、まずあなたに確認します。AIは返信を下書きできても、あなたがOKするまで送られません。"
         },
         {
           "sp": "B",
-          "en": "So it's a safety choice, not a missing feature.",
-          "ja": "機能不足ではなく、安全のための選択なんですね。"
+          "en": "So a person stays in the loop for the risky part.",
+          "ja": "危ない部分には、必ず人が関わるわけですね。"
         },
         {
           "sp": "A",
-          "en": "Most likely, yes. Though it also means agents can only do what each platform chooses to offer.",
-          "ja": "おそらくそうです。ただ同時に、エージェントは各プラットフォームが用意した範囲しか使えない、ということでもあります。"
+          "en": "Exactly. Google's guide also says: only connect apps you trust, and review what the agent does.",
+          "ja": "その通り。Googleのガイドには、信頼できるアプリだけをつなぎ、エージェントの操作を確認するように、とも書かれています。"
         }
       ],
       "bg": "blueprint"
@@ -345,7 +346,7 @@
           "at": 2
         }
       ],
-      "footer": "Start print = a human button · 印刷開始は人が押す",
+      "footer": "Start print = your approval · 印刷開始はあなたが承認",
       "footer_at": 3,
       "lines": [
         {
@@ -365,13 +366,13 @@
         },
         {
           "sp": "B",
-          "en": "And the start print button stays with a human.",
-          "ja": "そして、印刷開始のボタンは人が押す。"
+          "en": "And the start print button waits for a human.",
+          "ja": "そして、印刷開始は人の承認を待つ。"
         },
         {
           "sp": "A",
-          "en": "Exactly the same pattern as Gmail.",
-          "ja": "Gmailとまったく同じ考え方です。"
+          "en": "Exactly the same idea as sending mail.",
+          "ja": "メール送信とまったく同じ考え方です。"
         }
       ],
       "bg": "blueprint"
@@ -498,10 +499,11 @@
     }
   ],
   "review": {
-    "status": "self-reviewed, waiting for Shuhei",
+    "status": "ready for Shuhei",
     "notes": [
-      "The Google/Gmail MCP item came from one outlet (techstackups) in News Watch; the script says 'there was a report' and 'most likely' instead of stating it as fact. Check for a second source before publishing.",
+      "Fact check 2026-11-28: the News Watch item (techstackups) said the Gmail MCP server can't send email. Google's official Gmail MCP docs list send_message, reply and forward, with user approval required for sending. Script rewritten to follow the official docs and mention the report as 'not quite'.",
       "MCP published by Anthropic as an open standard in November 2024: well documented.",
+      "Security advice in scene 6 paraphrases Google's guide ('only use trusted tools', 'review all actions').",
       "Design/printing examples are framed as 'could', not as existing products.",
       "No logos, screenshots or web images: every visual is drawn by the template."
     ]

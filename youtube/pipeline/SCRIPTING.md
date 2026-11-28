@@ -32,3 +32,8 @@
 ## On-screen text
 - Heading in English + `heading_ja`. Short labels (1–4 words). Max 3 cards per screen.
 - Only icons from `ICON` in template.html; add new icons by drawing simple SVG paths.
+
+## Next-episode promise
+- The `end` scene teases the next episode. The next weekly run must make that episode
+  (check the previous episode's `end.next`), unless the facts changed; then say so in the hook.
+- Planned: ep002 "Why AI tools have usage limits" (teased in ep001).
