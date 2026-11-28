@@ -1,0 +1,11 @@
+{"lines":[
+{"sp":"A","shot":"promo","en":"Tonight on Behind the Headlines: Google opens official MCP servers for Gmail, Calendar and Drive.","ja":"今夜の「ニュースの裏側」：GoogleがGmail・カレンダー・ドライブの公式MCPサーバーを公開。"},
+{"sp":"A","shot":"promo2","en":"So why does sending an email still need your OK?","ja":"では、なぜメール送信には今もあなたの承認が必要なのでしょう？"},
+{"sp":"-","shot":"sting","pause":2.2},
+{"sp":"A","shot":"msA","en":"Good evening. I'm Mia.","ja":"こんばんは、ミアです。"},
+{"sp":"B","shot":"msB","en":"And I'm Ken. Mia, start us off. What is MCP, in one line?","ja":"ケンです。ミア、まずはMCPをひとことで言うと？"},
+{"sp":"A","shot":"ots","en":"Think of it as one shared plug between AI assistants and your apps.","ja":"AIアシスタントとアプリをつなぐ、共通のプラグだと考えてください。"},
+{"sp":"B","shot":"two","en":"And the Gmail part?","ja":"では、Gmailの話は？"},
+{"sp":"A","shot":"full","en":"The AI can read and draft. But nothing is sent until you approve it.","ja":"AIは読んだり下書きしたりできます。でも、あなたが承認するまで送信されません。"},
+{"sp":"B","shot":"wide","en":"That's the story behind the headlines. See you next week.","ja":"以上、ニュースの裏側でした。また来週。"}
+]}

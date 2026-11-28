@@ -1,0 +1,511 @@
+{
+  "id": "ep001",
+  "series": "Behind the Headlines",
+  "series_ja": "ニュースの裏側",
+  "number": 1,
+  "pillar": "Platforms & services",
+  "title": "MCP: how AI plugs into your apps",
+  "title_ja": "MCP：AIがアプリにつながるしくみ",
+  "news": {
+    "headline": "Configure the Google Workspace MCP servers (Gmail MCP server)",
+    "source": "Google Workspace developer docs",
+    "url": "https://developers.google.com/workspace/gmail/api/guides/configure-mcp-server",
+    "also": "techstackups report (2026-11-28) claimed the Gmail server can't send; Google's docs list send_message with user approval",
+    "found_in": "News Watch · Generative AI dev · 2026-11-28"
+  },
+  "speakers": {
+    "A": {
+      "name": "Mia",
+      "role": "guide",
+      "voice": "af_heart",
+      "speed": 0.95,
+      "color": "#FF8A3D"
+    },
+    "B": {
+      "name": "Ken",
+      "role": "curious learner",
+      "voice": "am_michael",
+      "speed": 0.98,
+      "color": "#C04BD8"
+    }
+  },
+  "scenes": [
+    {
+      "kind": "headline",
+      "chapter": "News",
+      "kicker": "This week's update · 今週のアップデート",
+      "headline": "Google offers official MCP servers for Gmail, Calendar and Drive",
+      "headline_ja": "GoogleがGmail・カレンダー・ドライブ向けの公式MCPサーバーを提供",
+      "twist": "…and sending an email needs your OK.",
+      "twist_ja": "…ただしメール送信にはあなたの承認が必要",
+      "twist_at": 2,
+      "source": "Source: Google Workspace developer docs",
+      "lines": [
+        {
+          "sp": "A",
+          "en": "Google now offers official MCP servers for Gmail, Calendar, Drive and more, so AI agents can work with your Workspace data.",
+          "ja": "Googleは、Gmail・カレンダー・ドライブなどの公式MCPサーバーを提供し、AIエージェントがWorkspaceのデータを扱えるようにしています。"
+        },
+        {
+          "sp": "B",
+          "en": "One report even said the Gmail one can't send email. Is that true?",
+          "ja": "Gmail用はメールを送れない、という記事もありましたよね。本当ですか？"
+        },
+        {
+          "sp": "A",
+          "en": "Not quite. Google's own docs say it can send, but only after you approve it. To see why, we need to know what MCP is.",
+          "ja": "少し違います。公式ドキュメントでは送信できますが、あなたの承認が必要です。理由を知るには、まずMCPを理解しましょう。"
+        },
+        {
+          "sp": "B",
+          "en": "So let's start there. What is it?",
+          "ja": "じゃあ、そこから。MCPって何ですか？"
+        }
+      ]
+    },
+    {
+      "kind": "title",
+      "chapter": "Intro",
+      "lines": [
+        {
+          "sp": "A",
+          "en": "Welcome to Behind the Headlines. One news story, and the idea behind it, in about four minutes.",
+          "ja": "「ニュースの裏側」へようこそ。ひとつのニュースと、その裏にある考え方を約4分で。"
+        }
+      ]
+    },
+    {
+      "kind": "matrix",
+      "chapter": "The problem",
+      "heading": "Every AI × every app = a custom adapter",
+      "heading_ja": "AIとアプリの組み合わせごとに専用の接続",
+      "left": [
+        {
+          "icon": "spark",
+          "label": "AI 1"
+        },
+        {
+          "icon": "spark",
+          "label": "AI 2"
+        },
+        {
+          "icon": "spark",
+          "label": "AI 3"
+        }
+      ],
+      "right": [
+        {
+          "icon": "calendar",
+          "label": "Calendar"
+        },
+        {
+          "icon": "file",
+          "label": "Files"
+        },
+        {
+          "icon": "database",
+          "label": "Database"
+        },
+        {
+          "icon": "pen",
+          "label": "Design tool"
+        }
+      ],
+      "apps_at": 1,
+      "wires_at": 2,
+      "count_at": 2,
+      "count": "3 × 4 = 12 adapters",
+      "hub_at": 4,
+      "hub_count": "3 + 4 = 7 connections",
+      "continues": true,
+      "lines": [
+        {
+          "sp": "B",
+          "en": "Start simple. Why does an AI need a protocol at all?",
+          "ja": "まず基本から。そもそもAIにプロトコルが必要なのはなぜ？"
+        },
+        {
+          "sp": "A",
+          "en": "Picture three AI assistants and four apps: your calendar, your files, a database, and a design tool.",
+          "ja": "AIアシスタントが3つ、アプリが4つあるとします。カレンダー、ファイル、データベース、デザインツール。"
+        },
+        {
+          "sp": "A",
+          "en": "Before MCP, each pair needed its own custom connector. That's twelve little adapters to build and keep working.",
+          "ja": "MCP以前は、組み合わせごとに専用の接続が必要でした。作って保守する接続が12個です。"
+        },
+        {
+          "sp": "B",
+          "en": "And every new app adds more.",
+          "ja": "アプリが増えるたびに、さらに増えると。"
+        },
+        {
+          "sp": "A",
+          "en": "Exactly. MCP, the Model Context Protocol, is like agreeing on one standard plug.",
+          "ja": "その通り。MCP（Model Context Protocol）は、プラグの形をひとつに決めるようなものです。"
+        },
+        {
+          "sp": "A",
+          "en": "Each AI learns the plug once. Each app offers the socket once. Now it's three plus four, not three times four.",
+          "ja": "AIは差し方を一度覚えるだけ。アプリも差し込み口を一度用意するだけ。3×4ではなく、3＋4で済みます。"
+        }
+      ]
+    },
+    {
+      "kind": "analogy",
+      "chapter": "The idea",
+      "heading": "One shared plug",
+      "heading_ja": "共通のプラグ",
+      "left_label": "AI assistant",
+      "right_label": "App / data",
+      "plug_label": "MCP",
+      "connect_at": 0,
+      "note": "Open standard · published by Anthropic, Nov 2024",
+      "note_ja": "オープン規格・2024年11月にAnthropicが公開",
+      "note_at": 1,
+      "lines": [
+        {
+          "sp": "B",
+          "en": "Like how one charger cable works with lots of different devices.",
+          "ja": "1本の充電ケーブルで、いろいろな機器が使えるのと同じですね。"
+        },
+        {
+          "sp": "A",
+          "en": "That's the idea. Anthropic published it as an open standard in late 2024, and many AI tools now support it.",
+          "ja": "まさにそれです。2024年末にAnthropicがオープン規格として公開し、今では多くのAIツールが対応しています。"
+        }
+      ]
+    },
+    {
+      "kind": "flow",
+      "chapter": "How it works",
+      "heading": "Inside an MCP server: a menu",
+      "heading_ja": "MCPサーバーの中身は「メニュー」",
+      "nodes": [
+        {
+          "icon": "spark",
+          "label": "AI app",
+          "sub": "asks"
+        },
+        {
+          "icon": "plug",
+          "label": "MCP",
+          "sub": "same plug"
+        },
+        {
+          "icon": "server",
+          "label": "MCP server",
+          "sub": "does the work"
+        },
+        {
+          "icon": "database",
+          "label": "App / data",
+          "sub": "your stuff"
+        }
+      ],
+      "nodes_at": 0,
+      "items": [
+        {
+          "icon": "gear",
+          "label": "Tools",
+          "label_ja": "ツール",
+          "sub": "actions · 操作",
+          "at": 2
+        },
+        {
+          "icon": "book",
+          "label": "Resources",
+          "label_ja": "リソース",
+          "sub": "things to read · 読むもの",
+          "at": 2
+        },
+        {
+          "icon": "chat",
+          "label": "Prompts",
+          "label_ja": "プロンプト",
+          "sub": "ready-made instructions · 指示文",
+          "at": 2
+        }
+      ],
+      "pulse_at": 4,
+      "lines": [
+        {
+          "sp": "B",
+          "en": "So what's actually inside an MCP server?",
+          "ja": "MCPサーバーの中身は、実際どうなっているんですか？"
+        },
+        {
+          "sp": "A",
+          "en": "Think of it as a menu the app hands to the AI. It lists three kinds of things.",
+          "ja": "アプリがAIに渡す「メニュー」だと考えてください。中身は3種類です。"
+        },
+        {
+          "sp": "A",
+          "en": "Tools are actions, like create an event. Resources are things to read, like a file. Prompts are ready-made instructions.",
+          "ja": "ツールは「予定を作る」などの操作。リソースはファイルなど読むもの。プロンプトは用意された指示文です。"
+        },
+        {
+          "sp": "B",
+          "en": "And the AI picks from that menu?",
+          "ja": "AIはそのメニューから選ぶわけですね。"
+        },
+        {
+          "sp": "A",
+          "en": "Yes. It asks, the server does the work, and sends back the result.",
+          "ja": "はい。AIが頼み、サーバーが実行し、結果を返します。"
+        }
+      ]
+    },
+    {
+      "kind": "switches",
+      "chapter": "Why ask first?",
+      "heading": "The menu sets what AI may do",
+      "heading_ja": "メニューがAIにできることを決める",
+      "items": [
+        {
+          "icon": "eye",
+          "label": "Read mail",
+          "label_ja": "メールを読む",
+          "on": true,
+          "at": 1
+        },
+        {
+          "icon": "pen",
+          "label": "Write a draft",
+          "label_ja": "下書きを作る",
+          "on": true,
+          "at": 2
+        },
+        {
+          "icon": "mail",
+          "label": "Send on its own",
+          "label_ja": "AIが勝手に送信",
+          "on": false,
+          "at": 2
+        }
+      ],
+      "human": "You approve each send · 送信はあなたが承認",
+      "human_at": 2,
+      "lines": [
+        {
+          "sp": "B",
+          "en": "So why does sending need my approval?",
+          "ja": "では、なぜ送信には私の承認が必要なんですか？"
+        },
+        {
+          "sp": "A",
+          "en": "Because the server decides what the AI may do on its own. Reading mail is low risk. Sending it in your name is not.",
+          "ja": "AIが単独でできることは、サーバーが決めているからです。読むのは低リスク。でも、あなたの名前で送るのは別です。"
+        },
+        {
+          "sp": "A",
+          "en": "So Google asks you first. The AI can draft a reply, and nothing goes out until you say yes.",
+          "ja": "だから、まずあなたに確認します。AIは返信を下書きできても、あなたがOKするまで送られません。"
+        },
+        {
+          "sp": "B",
+          "en": "So a person stays in the loop for the risky part.",
+          "ja": "危ない部分には、必ず人が関わるわけですね。"
+        },
+        {
+          "sp": "A",
+          "en": "Exactly. Google's guide also says: only connect apps you trust, and review what the agent does.",
+          "ja": "その通り。Googleのガイドには、信頼できるアプリだけをつなぎ、エージェントの操作を確認するように、とも書かれています。"
+        }
+      ],
+      "bg": "blueprint"
+    },
+    {
+      "kind": "cards",
+      "chapter": "For makers",
+      "heading": "Design & 3D printing: what it could look like",
+      "heading_ja": "デザインと3Dプリントでは？",
+      "cards": [
+        {
+          "icon": "cube",
+          "title": "Design tool",
+          "title_ja": "設計ツール",
+          "body": "“How much resin will this part need?”",
+          "body_ja": "この部品のレジン量は？",
+          "at": 1
+        },
+        {
+          "icon": "printer",
+          "title": "Printer",
+          "title_ja": "プリンター",
+          "body": "“Is the printer free tonight?”",
+          "body_ja": "今夜プリンターは空いてる？",
+          "at": 2
+        },
+        {
+          "icon": "mail",
+          "title": "Quote",
+          "title_ja": "見積もり",
+          "body": "“Draft a quote for the customer.”",
+          "body_ja": "お客様への見積もりを下書き",
+          "at": 2
+        }
+      ],
+      "footer": "Start print = your approval · 印刷開始はあなたが承認",
+      "footer_at": 3,
+      "lines": [
+        {
+          "sp": "B",
+          "en": "Bring it closer to us. Where does this matter for design and 3D printing?",
+          "ja": "私たちに近い話にすると、デザインや3Dプリントではどう関係しますか？"
+        },
+        {
+          "sp": "A",
+          "en": "Imagine a design tool, a slicer and a printer each offering a small MCP menu.",
+          "ja": "設計ツール、スライサー、プリンターが、それぞれ小さなMCPメニューを持っていると想像してください。"
+        },
+        {
+          "sp": "A",
+          "en": "You could ask: how much resin will this part need? Is the printer free tonight? And, draft a quote for the customer.",
+          "ja": "「この部品のレジン量は？」「今夜プリンターは空いてる？」「お客様への見積もりを下書きして」と頼めるかもしれません。"
+        },
+        {
+          "sp": "B",
+          "en": "And the start print button waits for a human.",
+          "ja": "そして、印刷開始は人の承認を待つ。"
+        },
+        {
+          "sp": "A",
+          "en": "Exactly the same idea as sending mail.",
+          "ja": "メール送信とまったく同じ考え方です。"
+        }
+      ],
+      "bg": "blueprint"
+    },
+    {
+      "kind": "cards",
+      "chapter": "What's next",
+      "heading": "Three things to watch",
+      "heading_ja": "次に注目すべき3つのこと",
+      "numbered": true,
+      "cards": [
+        {
+          "icon": "shield",
+          "title": "Trust",
+          "title_ja": "信頼",
+          "body": "A server you install can read your data.",
+          "body_ja": "入れたサーバーはデータを読める",
+          "at": 1
+        },
+        {
+          "icon": "warn",
+          "title": "Hidden instructions",
+          "title_ja": "隠れた指示",
+          "body": "Prompt injection tries to steer the AI.",
+          "body_ja": "プロンプトインジェクション",
+          "at": 2
+        },
+        {
+          "icon": "lock",
+          "title": "Lock-in",
+          "title_ja": "囲い込み",
+          "body": "An open plug needs open sockets too.",
+          "body_ja": "差し込み口も開かれていること",
+          "at": 3
+        }
+      ],
+      "lines": [
+        {
+          "sp": "B",
+          "en": "What should we watch next?",
+          "ja": "次に注目すべき点は？"
+        },
+        {
+          "sp": "A",
+          "en": "Three things. First, trust. A server you install can read your data, so only use ones you trust.",
+          "ja": "3つあります。まず信頼。入れたサーバーはデータを読めるので、信頼できるものだけを使うこと。"
+        },
+        {
+          "sp": "A",
+          "en": "Second, hidden instructions inside documents can try to steer an AI. That's called prompt injection.",
+          "ja": "2つ目は、文書に紛れた指示がAIを操ろうとすること。プロンプトインジェクションと呼ばれます。"
+        },
+        {
+          "sp": "A",
+          "en": "Third, platforms may push their own servers. An open plug only helps if the sockets stay open too.",
+          "ja": "3つ目は、各社が自社のサーバーを優先させる動き。プラグが共通でも、差し込み口が開かれていなければ意味が薄れます。"
+        }
+      ],
+      "bg": "network"
+    },
+    {
+      "kind": "cards",
+      "chapter": "Recap",
+      "heading": "Recap",
+      "heading_ja": "まとめ",
+      "numbered": true,
+      "cards": [
+        {
+          "icon": "plug",
+          "title": "Shared plug",
+          "title_ja": "共通のプラグ",
+          "body": "MCP connects AI and apps.",
+          "body_ja": "MCPはAIとアプリをつなぐ",
+          "at": 1
+        },
+        {
+          "icon": "book",
+          "title": "The menu rules",
+          "title_ja": "メニューが決める",
+          "body": "The server sets what AI may do.",
+          "body_ja": "AIにできることはサーバーが決める",
+          "at": 1
+        },
+        {
+          "icon": "hand",
+          "title": "Humans press",
+          "title_ja": "人が押す",
+          "body": "Risky buttons stay with people.",
+          "body_ja": "危険なボタンは人の手に",
+          "at": 1
+        }
+      ],
+      "lines": [
+        {
+          "sp": "B",
+          "en": "Quick recap?",
+          "ja": "まとめると？"
+        },
+        {
+          "sp": "A",
+          "en": "MCP is a shared plug between AI and apps. The server's menu sets what the AI may do. And the riskiest buttons stay with people.",
+          "ja": "MCPはAIとアプリをつなぐ共通のプラグ。サーバーのメニューがAIにできることを決める。そして、危険なボタンは人の手に残す。"
+        },
+        {
+          "sp": "B",
+          "en": "Got it. Simple enough.",
+          "ja": "わかりました。シンプルですね。"
+        }
+      ],
+      "bg": "orbit"
+    },
+    {
+      "kind": "end",
+      "chapter": "End",
+      "next": "Next: why AI tools have usage limits",
+      "next_ja": "次回：AIツールに利用上限があるのはなぜ？",
+      "lines": [
+        {
+          "sp": "A",
+          "en": "That's Behind the Headlines, from MK Production Lab. Next time: why AI tools suddenly have usage limits.",
+          "ja": "MK Production Labの「ニュースの裏側」でした。次回は、AIツールに利用上限があるのはなぜか、です。"
+        }
+      ]
+    }
+  ],
+  "review": {
+    "status": "ready for Shuhei",
+    "notes": [
+      "Fact check 2026-11-28: the News Watch item (techstackups) said the Gmail MCP server can't send email. Google's official Gmail MCP docs list send_message, reply and forward, with user approval required for sending. Script rewritten to follow the official docs and mention the report as 'not quite'.",
+      "MCP published by Anthropic as an open standard in November 2024: well documented.",
+      "Security advice in scene 6 paraphrases Google's guide ('only use trusted tools', 'review all actions').",
+      "Design/printing examples are framed as 'could', not as existing products.",
+      "No logos, screenshots or web images: every visual is drawn by the template."
+    ]
+  }
+}

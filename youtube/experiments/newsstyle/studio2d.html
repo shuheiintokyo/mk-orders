@@ -1,0 +1,166 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:N;src:url(fonts/r.ttf);font-weight:400}
+@font-face{font-family:N;src:url(fonts/b.ttf);font-weight:700}
+@font-face{font-family:N;src:url(fonts/k.ttf);font-weight:900}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#000;font-family:N,sans-serif;color:#fff}
+canvas{position:absolute;inset:0}
+.ov{position:absolute;inset:0;pointer-events:none}
+#bug{position:absolute;right:60px;top:44px;display:flex;align-items:center;gap:12px;font-weight:900;font-size:24px;letter-spacing:.06em;opacity:.92}
+#bug i{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#FFC23D,#FF8A3D 40%,#FF5C7A 70%,#C04BD8);display:grid;place-items:center;font-style:normal;color:#1a1020;font-size:20px}
+#l3{position:absolute;left:140px;bottom:250px;display:flex;align-items:stretch;transform-origin:left}
+#l3 .bar{width:12px;background:linear-gradient(#FFC23D,#FF5C7A,#C04BD8)}
+#l3 .box{background:rgba(12,10,20,.88);padding:14px 30px 16px}
+#l3 .nm{font-size:44px;font-weight:900}
+#l3 .rl{font-size:24px;color:#d9cfe8;font-weight:700}
+#tick{position:absolute;left:0;right:0;bottom:0;height:64px;background:rgba(10,8,16,.92);display:flex;align-items:center;overflow:hidden;border-top:3px solid #FF8A3D}
+#tick .tag{flex:none;height:100%;padding:0 26px;display:grid;place-items:center;background:linear-gradient(90deg,#FF8A3D,#FF5C7A);font-weight:900;font-size:26px;color:#1a1020;z-index:2}
+#tick .run{white-space:nowrap;font-size:28px;font-weight:700;padding-left:40px;color:#f1eaf7}
+#sub{position:absolute;left:0;right:0;bottom:92px;text-align:center}
+#sub span{display:inline-block;background:rgba(8,6,14,.72);padding:10px 30px;border-radius:14px;font-size:42px;font-weight:700;line-height:1.35;max-width:1500px}
+#promo,#full,#sting{position:absolute;inset:0;opacity:0}
+#promo{background:#0d0a14;overflow:hidden}
+.pband{position:absolute;left:-10%;width:120%;height:220px;transform:rotate(-8deg);background:linear-gradient(90deg,#FFC23D,#FF8A3D,#FF5C7A,#C04BD8)}
+.ptxt{position:absolute;left:140px;right:140px}
+#full{background:radial-gradient(circle at 30% 20%,#3a1c3f,#120d1c 70%)}
+.sw{display:flex;align-items:center;gap:30px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:26px;padding:22px 36px;margin-bottom:22px;width:1100px}
+.sw b{font-size:46px;flex:1}.sw small{display:block;font-size:30px;color:#c9bdd8;font-weight:400}
+.tg{width:130px;height:66px;border-radius:40px;position:relative}.tg div{position:absolute;top:7px;width:52px;height:52px;border-radius:50%;background:#fff}
+</style></head><body>
+<div id="stage" style="position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0">
+<svg width="1920" height="1080" viewBox="0 0 1920 1080">
+ <defs>
+  <linearGradient id="wall" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a1238"/><stop offset=".55" stop-color="#55204a"/><stop offset="1" stop-color="#1a0f2a"/></linearGradient>
+  <linearGradient id="desk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbf6ff"/><stop offset="1" stop-color="#d9cfe8"/></linearGradient>
+  <linearGradient id="brand" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFC23D"/><stop offset=".4" stop-color="#FF8A3D"/><stop offset=".7" stop-color="#FF5C7A"/><stop offset="1" stop-color="#C04BD8"/></linearGradient>
+  <radialGradient id="spot" cx=".5" cy=".3" r=".6"><stop offset="0" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+ </defs>
+ <g id="back">
+  <rect width="1920" height="1080" fill="#0c0914"/>
+  <rect x="-200" y="0" width="2320" height="760" fill="url(#wall)"/>
+  <g id="waves" stroke="rgba(255,255,255,.08)" stroke-width="2" fill="none"></g>
+  <rect x="160" y="120" width="40" height="640" rx="8" fill="#FF8A3D" opacity=".75"/><rect x="1720" y="120" width="40" height="640" rx="8" fill="#C04BD8" opacity=".75"/>
+  <rect x="420" y="110" width="1080" height="300" rx="20" fill="#140f1f" stroke="rgba(255,255,255,.18)" stroke-width="4"/>
+  <text id="wtxt" x="960" y="290" text-anchor="middle" font-family="N" font-weight="900" font-size="96" fill="#fff"></text>
+  <rect x="-200" y="760" width="2320" height="320" fill="#120e1b"/>
+  <ellipse cx="960" cy="900" rx="900" ry="120" fill="none" stroke="#FF8A3D" stroke-width="6" opacity=".7"/>
+  <rect width="1920" height="1080" fill="url(#spot)"/>
+ </g>
+ <g id="mia" transform="translate(700,0)">
+  <path d="M-150 760 C-150 610 -110 575 0 570 C110 575 150 610 150 760Z" fill="#F0735A"/>
+  <path d="M-40 575 L0 650 L40 575Z" fill="#fff"/><path d="M-40 575 L-20 700 L-70 600Z M40 575 L20 700 L70 600Z" fill="#d85a44"/>
+  <rect x="-22" y="520" width="44" height="60" fill="#E8B48E"/>
+  <g id="miah" transform="translate(0,450)">
+   <path d="M-95 -20 C-100 -120 100 -120 95 -20 L100 95 L-100 95Z" fill="#4a2c22"/>
+   <ellipse cx="0" cy="0" rx="78" ry="92" fill="#F2C4A0"/>
+   <path d="M-88 -5 C-95 -132 95 -132 88 -5 C70 -50 -10 -68 -88 -5Z" fill="#5a3528"/>
+   <g id="miae"><ellipse cx="-30" cy="5" rx="9" ry="12" fill="#2a1a20"/><ellipse cx="30" cy="5" rx="9" ry="12" fill="#2a1a20"/></g>
+   <path d="M-44 -22 Q-30 -30 -16 -22 M16 -22 Q30 -30 44 -22" stroke="#4a2c22" stroke-width="5" fill="none" stroke-linecap="round"/>
+   <path d="M0 15 Q-6 32 4 34" stroke="#c98d6c" stroke-width="4" fill="none" stroke-linecap="round"/>
+   <ellipse cx="-50" cy="38" rx="14" ry="8" fill="#f29a8a" opacity=".5"/><ellipse cx="50" cy="38" rx="14" ry="8" fill="#f29a8a" opacity=".5"/>
+   <ellipse id="miam" cx="0" cy="55" rx="18" ry="4" fill="#8a2a3a"/>
+  </g>
+ </g>
+ <g id="ken" transform="translate(1220,0)">
+  <path d="M-160 760 C-160 605 -115 570 0 566 C115 570 160 605 160 760Z" fill="#1f2d5a"/>
+  <path d="M-38 570 L0 660 L38 570Z" fill="#fff"/><path d="M-10 590 L10 590 L16 700 L0 720 L-16 700Z" fill="#FF8A3D"/>
+  <path d="M-38 570 L-14 720 L-80 600Z M38 570 L14 720 L80 600Z" fill="#17224a"/>
+  <rect x="-24" y="515" width="48" height="60" fill="#C98D66"/>
+  <g id="kenh" transform="translate(0,445)">
+   <ellipse cx="-80" cy="10" rx="14" ry="20" fill="#D9A07A"/><ellipse cx="80" cy="10" rx="14" ry="20" fill="#D9A07A"/>
+   <ellipse cx="0" cy="0" rx="80" ry="92" fill="#D9A07A"/>
+   <path d="M-84 0 C-100 -130 100 -130 84 0 C80 -38 62 -52 20 -50 C-20 -56 -72 -42 -84 0Z" fill="#1d1418"/>
+   <g id="kene"><ellipse cx="-30" cy="8" rx="9" ry="12" fill="#1d1418"/><ellipse cx="30" cy="8" rx="9" ry="12" fill="#1d1418"/></g>
+   <path d="M-46 -18 L-16 -22 M16 -22 L46 -18" stroke="#1d1418" stroke-width="7" fill="none" stroke-linecap="round"/>
+   <path d="M0 18 Q-7 36 4 38" stroke="#b07a58" stroke-width="4" fill="none" stroke-linecap="round"/>
+   <ellipse id="kenm" cx="0" cy="58" rx="20" ry="4" fill="#6a2030"/>
+  </g>
+ </g>
+ <g id="deskg">
+  <path d="M380 700 L1540 700 L1600 760 L320 760Z" fill="url(#desk)"/>
+  <rect x="320" y="760" width="1280" height="150" fill="#1a1426"/>
+  <rect x="320" y="760" width="1280" height="10" fill="url(#brand)"/>
+  <rect x="400" y="800" width="140" height="70" rx="14" fill="url(#brand)"/><text x="470" y="848" text-anchor="middle" font-family="N" font-weight="900" font-size="38" fill="#1a1020">MK</text>
+  <ellipse cx="560" cy="712" rx="44" ry="18" fill="#d85a44"/><ellipse cx="840" cy="712" rx="44" ry="18" fill="#d85a44"/>
+  <ellipse cx="1080" cy="712" rx="46" ry="18" fill="#17224a"/><ellipse cx="1360" cy="712" rx="46" ry="18" fill="#17224a"/>
+ </g>
+</svg></div>
+<div class="ov">
+  <div id="promo">
+    <div class="pband" id="pb1" style="top:120px"></div>
+    <div class="pband" id="pb2" style="top:760px;opacity:.5"></div>
+    <div class="ptxt" id="pk" style="top:385px;font-size:40px;font-weight:900;letter-spacing:.3em;color:#FFC23D"><span style="background:#0d0a14;padding:6px 18px;border-radius:10px">TONIGHT · 今夜のトピック</span></div>
+    <div class="ptxt" id="ph" style="top:470px;transform-origin:left center;font-size:92px;font-weight:900;line-height:1.08">Google opens official<br>MCP servers</div>
+    <div class="ptxt" id="pq" style="top:470px;font-size:92px;font-weight:900;line-height:1.08;opacity:0">Why does sending email<br>still need your OK?</div>
+  </div>
+  <div id="full">
+    <div style="position:absolute;left:180px;top:120px;font-size:64px;font-weight:900">What the AI may do <span style="font-size:36px;color:#c9bdd8">AIにできること</span></div>
+    <div style="position:absolute;left:180px;top:280px">
+      <div class="sw" id="s0"><b>Read mail<small>メールを読む</small></b><div class="tg" style="background:#2bc4a0"><div style="left:71px"></div></div></div>
+      <div class="sw" id="s1"><b>Write a draft<small>下書きを作る</small></b><div class="tg" style="background:#2bc4a0"><div style="left:71px"></div></div></div>
+      <div class="sw" id="s2"><b>Send: after your approval<small>送信：あなたの承認後</small></b><div class="tg" style="background:#FF8A3D"><div style="left:39px"></div></div></div>
+    </div>
+  </div>
+  <div id="sting"></div>
+  <div id="otsbox" style="position:absolute;right:150px;top:170px;width:700px;height:420px;border-radius:24px;overflow:hidden;background:#140f1f;border:3px solid rgba(255,255,255,.2);opacity:0">
+    <svg viewBox="0 0 700 420" width="700" height="420"><path d="M40 210H230M470 210H660" stroke="#FFC23D" stroke-width="10" stroke-linecap="round"/>
+    <rect x="200" y="150" width="120" height="120" rx="24" fill="#FF8A3D"/><rect x="318" y="175" width="34" height="18" rx="5" fill="#FF8A3D"/><rect x="318" y="228" width="34" height="18" rx="5" fill="#FF8A3D"/>
+    <rect x="380" y="150" width="120" height="120" rx="24" fill="#C04BD8"/><rect x="380" y="175" width="30" height="18" rx="5" fill="#140f1f"/><rect x="380" y="228" width="30" height="18" rx="5" fill="#140f1f"/>
+    <text x="350" y="100" text-anchor="middle" font-family="N" font-weight="900" font-size="44" fill="#fff">MCP = one shared plug</text>
+    <text x="350" y="345" text-anchor="middle" font-family="N" font-weight="700" font-size="30" fill="#d9cfe8">AI assistant ⟷ your apps</text></svg></div>
+  <div id="bug"><i>MK</i><span>BEHIND THE HEADLINES</span></div>
+  <div id="l3"><div class="bar"></div><div class="box"><div class="nm" id="l3n"></div><div class="rl" id="l3r"></div></div></div>
+  <div id="sub"><span id="subt"></span></div>
+  <div id="tick"><div class="tag">NEWS WATCH</div><div class="run" id="run">Google、Gmail・カレンダー・ドライブの公式MCPサーバーを提供　｜　OpenAI、GPT-6.2の利用枠を縮小　｜　Claude Code v2.1.332 公開：MCPサーバーのスキルを / メニューに表示　｜　Vercel、既存Proチームの標準ビルドを従量課金に　｜　</div></div>
+</div>
+<script>
+const W=1920,H=1080; const NS='http://www.w3.org/2000/svg';
+const wv=document.getElementById('waves'); const wp=[]; for(let i=0;i<12;i++){const p=document.createElementNS(NS,'path'); wv.appendChild(p); wp.push(p);}
+const HEAD={promo:'',msA:'',msB:'',ots:'',two:'APPROVAL FIRST',full:'',wide:'SEE YOU NEXT WEEK',sting:''};
+// camera: centre point and zoom per shot, plus drift (dz, dx)
+const SHOT={sting:{c:[960,560],z:.9,dz:.25,dx:0},msA:{c:[700,500],z:2.1,dz:.12,dx:0},msB:{c:[1220,495],z:2.1,dz:.12,dx:0},
+ ots:{c:[980,520],z:1.7,dz:.08,dx:-20},two:{c:[960,560],z:1.3,dz:.06,dx:30},full:{c:[960,560],z:1.3,dz:0,dx:0},wide:{c:[960,540],z:1.15,dz:-.2,dx:0},promo:{c:[960,540],z:1,dz:0,dx:0}};
+const ease=x=>x<0?0:x>1?1:1-Math.pow(1-x,3);
+let TL; window.init=tl=>{TL=tl;};
+window.render=t=>{
+  const L=TL.lines; let i=L.findIndex(l=>t<l.end+(l.sp==='-'?0:.35)); if(i<0) i=L.length-1;
+  const l=L[i]; const shot=l.shot.startsWith('promo')?'promo':l.shot; const sh=SHOT[shot];
+  const u=Math.min(1,(t-l.start)/Math.max(1,(l.end-l.start+.35))); const k=shot==='sting'?ease(u):u;
+  const z=sh.z+sh.dz*k, cx=sh.c[0]+sh.dx*k, cy=sh.c[1];
+  const st0=document.getElementById('stage'); st0.style.transform=`translate(${960-cx*z}px,${540-cy*z}px) scale(${z})`;
+  document.getElementById('back').style.filter=`blur(${Math.max(0,(z-1.1)*3)}px)`;
+  wp.forEach((p,j)=>{let d=''; for(let x=-200;x<=2120;x+=40){const y=330+j*22-120+40*Math.sin(x/220+t*.6+j); d+=(x===-200?'M':'L')+x+' '+y.toFixed(1);} p.setAttribute('d',d);});
+  document.getElementById('wtxt').textContent=HEAD[shot]||'';
+  const f=Math.floor(t*TL.fps);
+  [['A','mia',450],['B','ken',445]].forEach(([id,n,hy],q)=>{
+    const m=TL.mouth[id][f]||0; document.getElementById(n+'m').setAttribute('ry',(3+22*m).toFixed(1));
+    const blink=((t+q*1.7)%3.9)<.12; document.getElementById(n+'e').setAttribute('transform',blink?`translate(0,7) scale(1,.12) translate(0,-${q?8:5})`:'');
+    const other=(TL.mouth[id==='A'?'B':'A'][f]||0)>.02;
+    const talk=TL.mouth[id].slice(Math.max(0,f-8),f+1).reduce((x,y)=>x+y,0)/9;
+    const rot=(id==='A'?1:-1)*(other?6:0)+2*Math.sin(t*.9+q*2)+talk*6*Math.sin(t*4.3+q);
+    const nod=talk*6*Math.sin(t*3.1+q);
+    document.getElementById(n+'h').setAttribute('transform',`translate(0,${(hy+nod).toFixed(1)}) rotate(${rot.toFixed(2)})`);
+  });
+  const $=id=>document.getElementById(id);
+  const promoOn=l.shot.startsWith('promo');
+  $('promo').style.opacity=promoOn?1:0;
+  if(promoOn){ const pu=(t-L[0].start); $('pb1').style.transform=`rotate(-8deg) translateX(${(-30+pu*6)}%)`; $('pb2').style.transform=`rotate(-8deg) translateX(${(10-pu*5)}%)`;
+    $('ph').style.opacity=l.shot==='promo'?ease((t-l.start)*2):0; $('pq').style.opacity=l.shot==='promo2'?ease((t-l.start)*2):0; $('ph').style.transform=`scale(${1+.03*(t-l.start)})`; }
+  $('full').style.opacity=l.shot==='full'?1:0;
+  { const o=$('otsbox'); const v=t-l.start; o.style.opacity=l.shot==='ots'?ease(v*2.5):0; o.style.transform=`translateX(${(1-ease(v*2.5))*80}px)`; }
+  // sting: a quick logo wipe over the crane move
+  const st=$('sting'); if(l.shot==='sting'){ const v=t-l.start; const a=v<.4?v/.4:v>1.6?Math.max(0,1-(v-1.6)/.5):1;
+    st.style.opacity=a; st.innerHTML=`<div style="position:absolute;inset:0;background:rgba(10,7,16,.82);display:grid;place-items:center"><div style="text-align:center;transform:scale(${.9+.1*ease(v)})"><div style="width:150px;height:150px;margin:0 auto;border-radius:40px;background:linear-gradient(135deg,#FFC23D,#FF8A3D 40%,#FF5C7A 70%,#C04BD8);display:grid;place-items:center;font-size:66px;font-weight:900;color:#1a1020">MK</div><div style="font-size:76px;font-weight:900;margin-top:24px;text-shadow:0 6px 30px rgba(0,0,0,.6)">Behind the Headlines</div><div style="font-size:40px;font-weight:700;color:#f3e7ff">ニュースの裏側</div></div></div>`; } else st.style.opacity=0;
+  const studio=!promoOn && l.shot!=='sting';
+  $('bug').style.opacity=studio?.92:0; $('tick').style.opacity=studio?1:0;
+  $('run').style.transform=`translateX(${-((t*140)%2400)}px)`;
+  // lower third on first line of each anchor
+  const l3=$('l3'); const first=(l.shot==='msA'||l.shot==='msB'); if(first){ const v=t-l.start; const a=Math.min(ease(v*2.5),ease((l.end-t)*2.5));
+    l3.style.opacity=a; l3.style.transform=`scaleX(${.6+.4*a})`; $('l3n').textContent=l.sp==='A'?'Mia':'Ken'; $('l3r').textContent=l.sp==='A'?'Host · 司会（合成音声）':'Co-host · 聞き手（合成音声）'; } else l3.style.opacity=0;
+  const sub=$('subt'); const sp=L.find(x=>x.sp!=='-'&&t>=x.start&&t<=x.end+.2); sub.parentElement.style.opacity=sp?1:0; if(sp) sub.textContent=sp.ja;
+  return true;
+};
+window.ready=true;
+</script></body></html>
