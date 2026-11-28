@@ -9,3 +9,5 @@ youtube/episodes/*/out/
 youtube/.models/
 __pycache__/
 youtube/node_modules/
+youtube/experiments/newsstyle/out/
+youtube/experiments/newsstyle/fonts/

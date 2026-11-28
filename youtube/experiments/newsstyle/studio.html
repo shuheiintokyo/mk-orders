@@ -1,0 +1,200 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:N;src:url(fonts/r.ttf);font-weight:400}
+@font-face{font-family:N;src:url(fonts/b.ttf);font-weight:700}
+@font-face{font-family:N;src:url(fonts/k.ttf);font-weight:900}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#000;font-family:N,sans-serif;color:#fff}
+canvas{position:absolute;inset:0}
+.ov{position:absolute;inset:0;pointer-events:none}
+#bug{position:absolute;right:60px;top:44px;display:flex;align-items:center;gap:12px;font-weight:900;font-size:24px;letter-spacing:.06em;opacity:.92}
+#bug i{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#FFC23D,#FF8A3D 40%,#FF5C7A 70%,#C04BD8);display:grid;place-items:center;font-style:normal;color:#1a1020;font-size:20px}
+#l3{position:absolute;left:140px;bottom:250px;display:flex;align-items:stretch;transform-origin:left}
+#l3 .bar{width:12px;background:linear-gradient(#FFC23D,#FF5C7A,#C04BD8)}
+#l3 .box{background:rgba(12,10,20,.88);padding:14px 30px 16px}
+#l3 .nm{font-size:44px;font-weight:900}
+#l3 .rl{font-size:24px;color:#d9cfe8;font-weight:700}
+#tick{position:absolute;left:0;right:0;bottom:0;height:64px;background:rgba(10,8,16,.92);display:flex;align-items:center;overflow:hidden;border-top:3px solid #FF8A3D}
+#tick .tag{flex:none;height:100%;padding:0 26px;display:grid;place-items:center;background:linear-gradient(90deg,#FF8A3D,#FF5C7A);font-weight:900;font-size:26px;color:#1a1020;z-index:2}
+#tick .run{white-space:nowrap;font-size:28px;font-weight:700;padding-left:40px;color:#f1eaf7}
+#sub{position:absolute;left:0;right:0;bottom:92px;text-align:center}
+#sub span{display:inline-block;background:rgba(8,6,14,.72);padding:10px 30px;border-radius:14px;font-size:42px;font-weight:700;line-height:1.35;max-width:1500px}
+#promo,#full,#sting{position:absolute;inset:0;opacity:0}
+#promo{background:#0d0a14;overflow:hidden}
+.pband{position:absolute;left:-10%;width:120%;height:220px;transform:rotate(-8deg);background:linear-gradient(90deg,#FFC23D,#FF8A3D,#FF5C7A,#C04BD8)}
+.ptxt{position:absolute;left:140px;right:140px}
+#full{background:radial-gradient(circle at 30% 20%,#3a1c3f,#120d1c 70%)}
+.sw{display:flex;align-items:center;gap:30px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:26px;padding:22px 36px;margin-bottom:22px;width:1100px}
+.sw b{font-size:46px;flex:1}.sw small{display:block;font-size:30px;color:#c9bdd8;font-weight:400}
+.tg{width:130px;height:66px;border-radius:40px;position:relative}.tg div{position:absolute;top:7px;width:52px;height:52px;border-radius:50%;background:#fff}
+</style></head><body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<div class="ov">
+  <div id="promo">
+    <div class="pband" id="pb1" style="top:120px"></div>
+    <div class="pband" id="pb2" style="top:760px;opacity:.5"></div>
+    <div class="ptxt" id="pk" style="top:385px;font-size:40px;font-weight:900;letter-spacing:.3em;color:#FFC23D"><span style="background:#0d0a14;padding:6px 18px;border-radius:10px">TONIGHT · 今夜のトピック</span></div>
+    <div class="ptxt" id="ph" style="top:470px;font-size:92px;font-weight:900;line-height:1.08">Google opens official<br>MCP servers</div>
+    <div class="ptxt" id="pq" style="top:470px;font-size:92px;font-weight:900;line-height:1.08;opacity:0">Why does sending email<br>still need your OK?</div>
+  </div>
+  <div id="full">
+    <div style="position:absolute;left:180px;top:120px;font-size:64px;font-weight:900">What the AI may do <span style="font-size:36px;color:#c9bdd8">AIにできること</span></div>
+    <div style="position:absolute;left:180px;top:280px">
+      <div class="sw" id="s0"><b>Read mail<small>メールを読む</small></b><div class="tg" style="background:#2bc4a0"><div style="left:71px"></div></div></div>
+      <div class="sw" id="s1"><b>Write a draft<small>下書きを作る</small></b><div class="tg" style="background:#2bc4a0"><div style="left:71px"></div></div></div>
+      <div class="sw" id="s2"><b>Send: after your approval<small>送信：あなたの承認後</small></b><div class="tg" style="background:#FF8A3D"><div style="left:39px"></div></div></div>
+    </div>
+  </div>
+  <div id="sting"></div>
+  <div id="otsbox" style="position:absolute;right:150px;top:170px;width:700px;height:420px;border-radius:24px;overflow:hidden;background:#140f1f;border:3px solid rgba(255,255,255,.2);opacity:0">
+    <svg viewBox="0 0 700 420" width="700" height="420"><path d="M40 210H230M470 210H660" stroke="#FFC23D" stroke-width="10" stroke-linecap="round"/>
+    <rect x="200" y="150" width="120" height="120" rx="24" fill="#FF8A3D"/><rect x="318" y="175" width="34" height="18" rx="5" fill="#FF8A3D"/><rect x="318" y="228" width="34" height="18" rx="5" fill="#FF8A3D"/>
+    <rect x="380" y="150" width="120" height="120" rx="24" fill="#C04BD8"/><rect x="380" y="175" width="30" height="18" rx="5" fill="#140f1f"/><rect x="380" y="228" width="30" height="18" rx="5" fill="#140f1f"/>
+    <text x="350" y="100" text-anchor="middle" font-family="N" font-weight="900" font-size="44" fill="#fff">MCP = one shared plug</text>
+    <text x="350" y="345" text-anchor="middle" font-family="N" font-weight="700" font-size="30" fill="#d9cfe8">AI assistant ⟷ your apps</text></svg></div>
+  <div id="bug"><i>MK</i><span>BEHIND THE HEADLINES</span></div>
+  <div id="l3"><div class="bar"></div><div class="box"><div class="nm" id="l3n"></div><div class="rl" id="l3r"></div></div></div>
+  <div id="sub"><span id="subt"></span></div>
+  <div id="tick"><div class="tag">NEWS WATCH</div><div class="run" id="run">Google、Gmail・カレンダー・ドライブの公式MCPサーバーを提供　｜　OpenAI、GPT-6.2の利用枠を縮小　｜　Claude Code v2.1.332 公開：MCPサーバーのスキルを / メニューに表示　｜　Vercel、既存Proチームの標準ビルドを従量課金に　｜　</div></div>
+</div>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js"}}</script>
+<script type="module">
+import * as THREE from 'three';
+const W=1920,H=1080;
+const R=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,preserveDrawingBuffer:true});
+R.setSize(W,H,false); R.toneMapping=THREE.ACESFilmicToneMapping; R.toneMappingExposure=1.05; R.shadowMap.enabled=true;
+const S=new THREE.Scene(); S.background=new THREE.Color(0x07060c); S.fog=new THREE.Fog(0x07060c,14,30);
+const cam=new THREE.PerspectiveCamera(35,W/H,.1,100);
+const M=(c,o={})=>new THREE.MeshStandardMaterial({color:c,roughness:.6,metalness:.05,...o});
+const add=(g,m,p=[0,0,0],r=[0,0,0],sh=true)=>{const x=new THREE.Mesh(g,m);x.position.set(...p);x.rotation.set(...r);x.castShadow=sh;x.receiveShadow=true;S.add(x);return x;};
+
+// --- studio set ---
+add(new THREE.PlaneGeometry(60,60),M(0x0d0b14,{roughness:.25,metalness:.4}),[0,0,0],[-Math.PI/2,0,0],false);
+const ring=add(new THREE.RingGeometry(5.2,5.35,96),new THREE.MeshBasicMaterial({color:0xFF8A3D}),[0,.01,0],[-Math.PI/2,0,0],false);
+add(new THREE.CircleGeometry(5.2,96),M(0x15121e,{roughness:.35,metalness:.3}),[0,.005,0],[-Math.PI/2,0,0],false);
+// LED wall with live canvas texture
+const wc=document.createElement('canvas'); wc.width=2048; wc.height=640; const wx=wc.getContext('2d');
+const wt=new THREE.CanvasTexture(wc); wt.colorSpace=THREE.SRGBColorSpace;
+add(new THREE.PlaneGeometry(16,5),new THREE.MeshBasicMaterial({map:wt}),[0,3.3,-5.5],[0,0,0],false);
+add(new THREE.BoxGeometry(16.4,5.4,.2),M(0x111018),[0,3.3,-5.62]);
+// side light columns
+for(const x of [-9.5,-7.6,7.6,9.5]){ add(new THREE.BoxGeometry(.5,6,.5),M(0x16141f),[x,3,-4.4]); add(new THREE.BoxGeometry(.08,5.6,.52),new THREE.MeshBasicMaterial({color:x<0?0xFF8A3D:0xC04BD8}),[x+(x<0?.26:-.26),3,-4.4],[0,0,0],false); }
+// ceiling rig
+for(let i=-6;i<=6;i++) add(new THREE.BoxGeometry(.6,.08,.3),new THREE.MeshBasicMaterial({color:0xfff2dd}),[i*1.2,7.2,-2],[0,0,0],false);
+// anchor desk: solid front panel, white top, glowing strip, logo panel
+add(new THREE.BoxGeometry(4.6,1.1,1.0),M(0x1b1726,{roughness:.3,metalness:.45}),[0,.55,.75]);
+add(new THREE.BoxGeometry(4.8,.07,1.25),M(0xeae6f0,{roughness:.2,metalness:.1}),[0,1.12,.7]);
+add(new THREE.BoxGeometry(4.62,.05,.02),new THREE.MeshBasicMaterial({color:0xFF5C7A}),[0,.3,1.26],[0,0,0],false);
+// desk logo panel
+const lc=document.createElement('canvas'); lc.width=512; lc.height=160; const lx=lc.getContext('2d');
+const lg=lx.createLinearGradient(0,0,512,0); ['#FFC23D','#FF8A3D','#FF5C7A','#C04BD8'].forEach((c,i)=>lg.addColorStop(i/3,c));
+lx.fillStyle=lg; lx.fillRect(0,0,512,160); lx.fillStyle='#1a1020'; lx.font='900 92px N'; lx.textAlign='center'; lx.textBaseline='middle';
+lx.fillText('MK  BEHIND THE HEADLINES'.slice(0,2),256,84);
+const lt=new THREE.CanvasTexture(lc); lt.colorSpace=THREE.SRGBColorSpace;
+add(new THREE.PlaneGeometry(1.1,.34),new THREE.MeshBasicMaterial({map:lt}),[0,.72,1.27],[0,0,0],false);
+
+// --- anchors (stylised, built from simple shapes; not modelled on any real person) ---
+function anchor(o){
+  const g=new THREE.Group(); S.add(g); g.position.set(...o.pos);
+  const skin=M(o.skin,{roughness:.55}), suit=M(o.suit,{roughness:.7}), hair=M(o.hair,{roughness:.8}), dark=M(0x1a1420,{roughness:.4});
+  const part=(geo,mat,p,r=[0,0,0],s=[1,1,1],parent=g)=>{const m=new THREE.Mesh(geo,mat);m.position.set(...p);m.rotation.set(...r);m.scale.set(...s);m.castShadow=true;parent.add(m);return m;};
+  part(new THREE.CapsuleGeometry(.42,.7,8,24),suit,[0,1.25,0],[0,0,0],[1.25,1,.75]);
+  part(new THREE.CylinderGeometry(.16,.18,.25,24),skin,[0,1.92,0]);
+  part(new THREE.ConeGeometry(.17,.42,24),M(o.shirt),[0,1.68,.3],[Math.PI,0,0],[1,1,.35]);
+  if(o.tie) part(new THREE.BoxGeometry(.09,.36,.04),M(o.tie),[0,1.6,.33]);
+  // arms resting on the desk
+  for(const s of [-1,1]){ part(new THREE.CapsuleGeometry(.13,.55,6,16),suit,[s*.56,1.25,.25],[1.1,0,s*.25]); part(new THREE.SphereGeometry(.11,16,12),skin,[s*.42,1.12,.62]); }
+  const head=new THREE.Group(); head.position.set(0,2.32,0); g.add(head);
+  part(new THREE.SphereGeometry(.34,32,24),skin,[0,0,0],[0,0,0],[.92,1.08,.95],head);
+  o.hairFn(part,hair,head);
+  const eyes=[-1,1].map(s=>part(new THREE.SphereGeometry(.045,16,12),dark,[s*.12,.05,.3],[0,0,0],[1,1,.6],head));
+  [-1,1].forEach(s=>part(new THREE.BoxGeometry(.11,.022,.02),hair,[s*.12,.15,.31],[0,0,-s*.12],[1,1,1],head));
+  const mouth=part(new THREE.SphereGeometry(.07,20,12),M(0x5a1e2a),[0,-.15,.29],[0,0,0],[1.1,.15,.4],head);
+  part(new THREE.SphereGeometry(.035,12,8),skin,[0,-.02,.33],[0,0,0],[1,1.2,1],head); // nose
+  return {g,head,eyes,mouth,base:o.pos.slice()};
+}
+const mia=anchor({pos:[-1.05,-.15,.05],skin:0xf1c7a6,suit:0xE0634F,shirt:0xfff4ea,hair:0x3b2620,
+  hairFn:(p,m,h)=>{p(new THREE.SphereGeometry(.37,32,24,0,Math.PI*2,0,Math.PI*.55),m,[0,.04,-.02],[-.25,0,0],[1,1.05,1.02],h);
+    p(new THREE.CylinderGeometry(.36,.3,.5,32,1,true,Math.PI*.55,Math.PI*.9),m,[0,-.12,-.02],[0,0,0],[1,1,1],h);}});
+const ken=anchor({pos:[1.05,-.15,.05],skin:0xd9a882,suit:0x22305a,shirt:0xf3f6fb,tie:0xFF8A3D,hair:0x1c1714,
+  hairFn:(p,m,h)=>{p(new THREE.SphereGeometry(.36,32,24,0,Math.PI*2,0,Math.PI*.42),m,[0,.06,-.03],[-.35,0,0],[1,1,1.02],h);}});
+mia.g.rotation.y=.22; ken.g.rotation.y=-.22;
+
+// --- lights ---
+S.add(new THREE.HemisphereLight(0xbfb6ff,0x1a1020,.55));
+const key=new THREE.SpotLight(0xfff1e0,90,30,.5,.6); key.position.set(0,7,8); key.target.position.set(0,1.8,0); key.castShadow=true; S.add(key,key.target);
+const rimL=new THREE.PointLight(0xFF8A3D,30,12); rimL.position.set(-4,3,-2); S.add(rimL);
+const rimR=new THREE.PointLight(0xC04BD8,30,12); rimR.position.set(4,3,-2); S.add(rimR);
+
+// --- LED wall content ---
+const HEAD={promo:'TONIGHT',msA:'',msB:'',ots:'',two:'',full:'APPROVAL FIRST',wide:'SEE YOU NEXT WEEK',sting:'BEHIND THE HEADLINES'};
+function drawWall(t,shot){
+  const g=wx.createLinearGradient(0,0,2048,640); const k=(Math.sin(t*.3)+1)/2;
+  g.addColorStop(0,'#2a1238'); g.addColorStop(.5+.2*k,'#5a1f45'); g.addColorStop(1,'#1a0f2a');
+  wx.fillStyle=g; wx.fillRect(0,0,2048,640);
+  wx.strokeStyle='rgba(255,255,255,.08)'; wx.lineWidth=2;
+  for(let i=0;i<14;i++){ wx.beginPath(); for(let x=0;x<=2048;x+=32){ const y=320+i*18-120+40*Math.sin(x/220+t*.6+i); x?wx.lineTo(x,y):wx.moveTo(x,y);} wx.stroke(); }
+  wx.fillStyle='#fff'; wx.font='900 120px N'; wx.textAlign='center'; wx.textBaseline='middle';
+  wx.font='900 84px N'; if(shot!=='ots') wx.fillText(HEAD[shot]||'', 1024, 120);
+  wt.needsUpdate=true;
+}
+
+// --- shots: [camera position, look-at, fov] with a slow drift inside each shot ---
+const SHOT={
+  sting:{p:[0,7,16],q:[0,1.8,0],f:40,d:[0,-2.5,-5]},
+  msA:{p:[-1.9,2.5,4.2],q:[-1.05,2.25,0],f:24,d:[.15,0,-.35]},
+  msB:{p:[1.9,2.5,4.2],q:[1.05,2.25,0],f:24,d:[-.15,0,-.35]},
+  ots:{p:[-.9,2.45,4.4],q:[-.25,2.05,0],f:30,d:[.1,0,-.25]},
+  two:{p:[0,2.4,6.2],q:[0,2,0],f:30,d:[.4,0,-.3]},
+  full:{p:[0,2.4,6.2],q:[0,2,0],f:30,d:[0,0,0]},
+  wide:{p:[0,3.2,9.5],q:[0,2.2,0],f:38,d:[0,1.5,4.5]},
+  promo:{p:[0,3,11],q:[0,2.4,0],f:36,d:[0,0,0]}
+};
+const ease=x=>x<0?0:x>1?1:1-Math.pow(1-x,3);
+let TL;
+window.init=tl=>{TL=tl;};
+window.render=t=>{
+  const L=TL.lines; let i=L.findIndex(l=>t<l.end+ (l.sp==='-'?0:.35)); if(i<0) i=L.length-1;
+  const l=L[i]; const shot=l.shot.startsWith('promo')?'promo':l.shot; const sh=SHOT[shot];
+  const u=Math.min(1,(t-l.start)/Math.max(1,(l.end-l.start+.35)));
+  const k=shot==='sting'?ease(u):u;
+  cam.position.set(sh.p[0]+sh.d[0]*k,sh.p[1]+sh.d[1]*k,sh.p[2]+sh.d[2]*k); cam.fov=sh.f; cam.updateProjectionMatrix();
+  cam.lookAt(...sh.q);
+  drawWall(t,shot);
+  ring.material.color.setHSL((.07+.03*Math.sin(t)),1,.6);
+  // anchors: mouth from audio envelope, blinks, small head motion while talking
+  const f=Math.floor(t*TL.fps);
+  [['A',mia],['B',ken]].forEach(([id,a],n)=>{
+    const m=(TL.mouth[id][f]||0); a.mouth.scale.y=.15+1.6*m;
+    const blink=((t+n*1.7)%3.9)<.12; a.eyes.forEach(e=>e.scale.y=blink?.1:1);
+    const talk=TL.mouth[id].slice(Math.max(0,f-8),f+1).reduce((x,y)=>x+y,0)/9;
+    a.head.rotation.x=.04*Math.sin(t*2.1+n)*(.3+talk*3); a.head.rotation.y=.05*Math.sin(t*.7+n*2)+(id==='A'?.1:-.1)*(talk>0?0:1)*0;
+    a.head.rotation.z=.02*Math.sin(t*1.3+n);
+    // the listener turns toward the speaker
+    const other=TL.mouth[id==='A'?'B':'A'][f]>0.02;
+    a.head.rotation.y=(id==='A'?1:-1)*(other?.35:.0)+.04*Math.sin(t*.7+n);
+  });
+  R.render(S,cam);
+  // overlays
+  const $=id=>document.getElementById(id);
+  const promoOn=l.shot.startsWith('promo');
+  $('promo').style.opacity=promoOn?1:0;
+  if(promoOn){ const pu=(t-L[0].start); $('pb1').style.transform=`rotate(-8deg) translateX(${(-30+pu*6)}%)`; $('pb2').style.transform=`rotate(-8deg) translateX(${(10-pu*5)}%)`;
+    $('ph').style.opacity=l.shot==='promo'?ease((t-l.start)*2):0; $('pq').style.opacity=l.shot==='promo2'?ease((t-l.start)*2):0; $('ph').style.transform=`scale(${1+.03*(t-l.start)})`; }
+  $('full').style.opacity=l.shot==='full'?1:0;
+  { const o=$('otsbox'); const v=t-l.start; o.style.opacity=l.shot==='ots'?ease(v*2.5):0; o.style.transform=`translateX(${(1-ease(v*2.5))*80}px)`; }
+  // sting: a quick logo wipe over the crane move
+  const st=$('sting'); if(l.shot==='sting'){ const v=t-l.start; const a=v<.4?v/.4:v>1.6?Math.max(0,1-(v-1.6)/.5):1;
+    st.style.opacity=a; st.innerHTML=`<div style="position:absolute;inset:0;display:grid;place-items:center"><div style="text-align:center;transform:scale(${.9+.1*ease(v)})"><div style="width:150px;height:150px;margin:0 auto;border-radius:40px;background:linear-gradient(135deg,#FFC23D,#FF8A3D 40%,#FF5C7A 70%,#C04BD8);display:grid;place-items:center;font-size:66px;font-weight:900;color:#1a1020">MK</div><div style="font-size:76px;font-weight:900;margin-top:24px;text-shadow:0 6px 30px rgba(0,0,0,.6)">Behind the Headlines</div><div style="font-size:40px;font-weight:700;color:#f3e7ff">ニュースの裏側</div></div></div>`; } else st.style.opacity=0;
+  const studio=!promoOn && l.shot!=='sting';
+  $('bug').style.opacity=studio?.92:0; $('tick').style.opacity=studio?1:0;
+  $('run').style.transform=`translateX(${-((t*140)%2400)}px)`;
+  // lower third on first line of each anchor
+  const l3=$('l3'); const first=(l.shot==='msA'||l.shot==='msB'); if(first){ const v=t-l.start; const a=Math.min(ease(v*2.5),ease((l.end-t)*2.5));
+    l3.style.opacity=a; l3.style.transform=`scaleX(${.6+.4*a})`; $('l3n').textContent=l.sp==='A'?'Mia':'Ken'; $('l3r').textContent=l.sp==='A'?'Host · 司会（合成音声）':'Co-host · 聞き手（合成音声）'; } else l3.style.opacity=0;
+  const sub=$('subt'); const sp=L.find(x=>x.sp!=='-'&&t>=x.start&&t<=x.end+.2); sub.parentElement.style.opacity=sp?1:0; if(sp) sub.textContent=sp.ja;
+  return true;
+};
+window.ready=true;
+</script></body></html>
