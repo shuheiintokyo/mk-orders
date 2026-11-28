@@ -1,6 +1,6 @@
 import "server-only";
 import { getHub, getSubPage, plain, type Block } from "./news";
-import { buildPosts, isLatin, parseItem, pickIndex } from "./social-text";
+import { buildPosts, isCommentary, isLatin, parseItem, pickIndex } from "./social-text";
 
 // Daily social posts: pick one item from last night's News Watch, build the texts,
 // and send them through Buffer (free plan: X, Threads and Instagram as 3 channels).
@@ -57,7 +57,7 @@ export async function dailyItem(now = new Date()): Promise<DailyItem | null> {
   if (!pick) return null;
   // Post the story the most outlets covered; on a tie prefer an English headline (Threads and Instagram get an English line).
   const parsed = pick.sec.items.map((b) => parseItem(b.data.rich_text));
-  const score = (p: (typeof parsed)[number]) => p.sources * 2 + (isLatin(p.headline) ? 1 : 0);
+  const score = (p: (typeof parsed)[number]) => (isCommentary(p) ? -99 : p.sources * 2 + (isLatin(p.headline) ? 1 : 0));
   const index = parsed.reduce((best, p, i) => (score(p) > score(parsed[best]) ? i : best), 0);
   const item = parsed[index];
   const { s } = pick;

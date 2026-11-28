@@ -1,6 +1,6 @@
 import "server-only";
 import { getHub, getSubPage, plain, type Block } from "./news";
-import { parseItem, topicOf } from "./social-text";
+import { isCommentary, parseItem, topicOf } from "./social-text";
 
 // News Watch pages turned into story cards: headline, Japanese summary and where it came from.
 
@@ -53,7 +53,7 @@ export function storiesOf(list: Block[]): Story[] {
     if (b.type === "heading_2") date = plain(b.data.rich_text).trim();
     else if (b.type === "bulleted_list_item" && date) {
       const p = parseItem(b.data.rich_text);
-      if (p.headline) out.push({ id: b.id, date, ...p, domain: domainOf(p.url), lang: langOf(p.headline) });
+      if (p.headline && !isCommentary(p)) out.push({ id: b.id, date, ...p, domain: domainOf(p.url), lang: langOf(p.headline) });
     }
   }
   return out;
