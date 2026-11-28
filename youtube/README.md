@@ -1,4 +1,4 @@
-# Behind the Update: YouTube pipeline
+# Behind the Headlines (ニュースの裏側): YouTube pipeline
 
 Short explainer videos (3–5 min) for the MK Production Lab YouTube channel.
 English narration (two synthetic voices), Japanese subtitles burned in, every

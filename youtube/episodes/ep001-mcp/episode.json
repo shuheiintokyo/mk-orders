@@ -1,7 +1,7 @@
 {
   "id": "ep001",
-  "series": "Behind the Update",
-  "series_ja": "アップデートの裏側",
+  "series": "Behind the Headlines",
+  "series_ja": "ニュースの裏側",
   "number": 1,
   "pillar": "Platforms & services",
   "title": "MCP: how AI plugs into your apps",
@@ -68,8 +68,8 @@
       "lines": [
         {
           "sp": "A",
-          "en": "Welcome to Behind the Update. One news story, and the idea behind it, in about four minutes.",
-          "ja": "「アップデートの裏側」へようこそ。ひとつのニュースと、その裏にある考え方を約4分で。"
+          "en": "Welcome to Behind the Headlines. One news story, and the idea behind it, in about four minutes.",
+          "ja": "「ニュースの裏側」へようこそ。ひとつのニュースと、その裏にある考え方を約4分で。"
         }
       ]
     },
@@ -311,7 +311,8 @@
           "en": "Most likely, yes. Though it also means agents can only do what each platform chooses to offer.",
           "ja": "おそらくそうです。ただ同時に、エージェントは各プラットフォームが用意した範囲しか使えない、ということでもあります。"
         }
-      ]
+      ],
+      "bg": "blueprint"
     },
     {
       "kind": "cards",
@@ -372,7 +373,8 @@
           "en": "Exactly the same pattern as Gmail.",
           "ja": "Gmailとまったく同じ考え方です。"
         }
-      ]
+      ],
+      "bg": "blueprint"
     },
     {
       "kind": "cards",
@@ -427,7 +429,8 @@
           "en": "Third, platforms may push their own servers. An open plug only helps if the sockets stay open too.",
           "ja": "3つ目は、各社が自社のサーバーを優先させる動き。プラグが共通でも、差し込み口が開かれていなければ意味が薄れます。"
         }
-      ]
+      ],
+      "bg": "network"
     },
     {
       "kind": "cards",
@@ -477,7 +480,8 @@
           "en": "Got it. Simple enough.",
           "ja": "わかりました。シンプルですね。"
         }
-      ]
+      ],
+      "bg": "orbit"
     },
     {
       "kind": "end",
@@ -487,8 +491,8 @@
       "lines": [
         {
           "sp": "A",
-          "en": "That's Behind the Update, from MK Production Lab. Next time: why AI tools suddenly have usage limits.",
-          "ja": "MK Production Labの「アップデートの裏側」でした。次回は、AIツールに利用上限があるのはなぜか、です。"
+          "en": "That's Behind the Headlines, from MK Production Lab. Next time: why AI tools suddenly have usage limits.",
+          "ja": "MK Production Labの「ニュースの裏側」でした。次回は、AIツールに利用上限があるのはなぜか、です。"
         }
       ]
     }

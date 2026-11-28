@@ -11,7 +11,7 @@
 
 ## Structure (10 scenes, 500–650 words, 3–5 min)
 1. `headline` — the news + the puzzle (Mia states it, Ken reacts, ends on a question)
-2. `title` — "Welcome to Behind the Update…" one line
+2. `title` — "Welcome to Behind the Headlines…" one line
 3. background / the problem
 4. one analogy, drawn (`analogy` or `matrix`)
 5. how it works (`flow`, max 4 nodes + 3 items)

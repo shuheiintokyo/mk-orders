@@ -1,7 +1,7 @@
 """Step 1 of the render: make the narration, a soft music bed and the subtitle files.
 
 Voices come from Kokoro (open model, Apache-2.0 licence, runs free on your own
-computer). Music is generated here from plain sine tones, so nobody owns it but us.
+computer). Music is generated from scratch by music.py (calm study style, ducks under the voice).
 
 Usage: python3 voice.py <episode folder>
 Writes into <episode folder>/out/: voice.wav, music.wav, timings.json, ja.srt, en.srt
@@ -11,6 +11,9 @@ from pathlib import Path
 
 import numpy as np
 import soundfile as sf
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from music import music_track
 
 SR = 24000
 GAP_LINE = 0.35    # pause between two lines in the same scene (seconds)
@@ -42,30 +45,6 @@ def srt_time(t):
     m, ms = divmod(ms, 60000)
     s, ms = divmod(ms, 1000)
     return f"{h:02}:{m:02}:{s:02},{ms:03}"
-
-
-def music_bed(seconds):
-    """A quiet, slowly changing chord pad (Cmaj7 - Am7 - Fmaj7 - G6), self-made."""
-    chords = [[261.6, 329.6, 392.0, 493.9], [220.0, 261.6, 329.6, 392.0],
-              [174.6, 220.0, 261.6, 329.6], [196.0, 246.9, 293.7, 329.6]]
-    bar = 8.0
-    t = np.arange(int(seconds * SR)) / SR
-    out = np.zeros_like(t)
-    for i in range(int(seconds // bar) + 2):
-        start = i * bar
-        seg = (t >= start - 2) & (t < start + bar + 2)
-        if not seg.any():
-            continue
-        tt = t[seg] - start
-        env = np.clip((tt + 2) / 3, 0, 1) * np.clip((bar + 2 - tt) / 3, 0, 1)
-        for f in chords[i % 4]:
-            out[seg] += env * (np.sin(2 * math.pi * f * t[seg]) + 0.3 * np.sin(2 * math.pi * f * 2.003 * t[seg]))
-    out *= 0.5 + 0.5 * np.sin(2 * math.pi * t / 23.0) ** 2  # slow swell
-    out = out / (np.abs(out).max() + 1e-9) * 0.05            # about -26 dBFS: stays under the voice
-    fade = int(3 * SR)
-    out[:fade] *= np.linspace(0, 1, fade)
-    out[-fade:] *= np.linspace(1, 0, fade)
-    return out.astype(np.float32)
 
 
 def main(ep_dir):
@@ -108,8 +87,9 @@ def main(ep_dir):
 
     voice = np.concatenate(audio)
     sf.write(out / "voice.wav", voice, SR)
-    sf.write(out / "music.wav", music_bed(len(voice) / SR), SR)
-    (out / "timings.json").write_text(json.dumps({"total": round(total, 3), "scenes": scenes}, indent=1))
+    timings = {"total": round(total, 3), "scenes": scenes}
+    sf.write(out / "music.wav", music_track(len(voice) / SR, timings, [s["kind"] for s in ep["scenes"]], SR, level_db=-33), SR)
+    (out / "timings.json").write_text(json.dumps(timings, indent=1))
     (out / "ja.srt").write_text("\n".join(ja), encoding="utf-8")
     (out / "en.srt").write_text("\n".join(en), encoding="utf-8")
     print(f"total {total:.1f}s ({total/60:.1f} min)")
