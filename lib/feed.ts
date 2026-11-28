@@ -1,11 +1,12 @@
 import "server-only";
 import { getHub, getSubPage, plain, type Block } from "./news";
-import { parseItem, topicOf } from "./social-text";
+import { isCommentary, parseItem, topicOf } from "./social-text";
+import { matchEpisode } from "./episodes";
 
 // News Watch pages turned into story cards: headline, Japanese summary and where it came from.
 
 export type Lang = { code: string; ja: string };
-export type Story = { id: string; date: string; headline: string; summary: string; source: string; url: string; domain: string; lang: Lang | null; sources: number };
+export type Story = { id: string; date: string; headline: string; summary: string; source: string; url: string; domain: string; lang: Lang | null; sources: number; video?: { url: string; title: string } };
 
 /** The language of the original article, guessed from its headline (the headline keeps the original wording). */
 export function langOf(headline: string): Lang | null {
@@ -39,6 +40,15 @@ function domainOf(url: string) {
   }
 }
 
+/** Mark each story that a YouTube episode explains ("watch the deep dive"). */
+export function withVideos(stories: Story[], episodes: { url: string; title: string; description: string }[]): Story[] {
+  if (!episodes.length) return stories;
+  return stories.map((s) => {
+    const v = matchEpisode(s, episodes);
+    return v ? { ...s, video: { url: v.url, title: v.title } } : s;
+  });
+}
+
 /** The day's pick for a topic: from the newest day, the story the most outlets covered (ties: listed first). */
 export function topPick(stories: Story[]): Story | undefined {
   const day = stories[0]?.date;
@@ -53,7 +63,7 @@ export function storiesOf(list: Block[]): Story[] {
     if (b.type === "heading_2") date = plain(b.data.rich_text).trim();
     else if (b.type === "bulleted_list_item" && date) {
       const p = parseItem(b.data.rich_text);
-      if (p.headline) out.push({ id: b.id, date, ...p, domain: domainOf(p.url), lang: langOf(p.headline) });
+      if (p.headline && !isCommentary(p)) out.push({ id: b.id, date, ...p, domain: domainOf(p.url), lang: langOf(p.headline) });
     }
   }
   return out;
