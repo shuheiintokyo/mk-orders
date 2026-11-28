@@ -8,4 +8,4 @@ node_modules
 youtube/episodes/*/out/
 youtube/.models/
 __pycache__/
-pipeline/fonts/*.ttf
+youtube/node_modules/

@@ -17,8 +17,9 @@ This folder is not part of the website. `.vercelignore` keeps it out of deploys.
 
    ```bash
    pip install kokoro-onnx soundfile numpy
-   npm i -D playwright && npx playwright install chromium   # skip if Playwright is already there
-   # fonts: put Noto Sans JP (OFL) in pipeline/fonts as r.ttf (Regular), b.ttf (Bold), k.ttf (Black)
+   cd youtube && npm i --no-save playwright && npx playwright install chromium && cd ..   # one time
+   # fonts are included: Noto Sans JP (SIL Open Font License) in pipeline/fonts
+   cd youtube
    python3 pipeline/voice.py episodes/ep001-mcp     # voice, music, subtitles (~1 min)
    node pipeline/render.js episodes/ep001-mcp       # frames → MP4 (~10 min)
    ```
