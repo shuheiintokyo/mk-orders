@@ -5,7 +5,7 @@ import { parseItem, topicOf } from "./social-text";
 // News Watch pages turned into story cards: headline, Japanese summary and where it came from.
 
 export type Lang = { code: string; ja: string };
-export type Story = { id: string; date: string; headline: string; summary: string; source: string; url: string; domain: string; lang: Lang | null };
+export type Story = { id: string; date: string; headline: string; summary: string; source: string; url: string; domain: string; lang: Lang | null; sources: number };
 
 /** The language of the original article, guessed from its headline (the headline keeps the original wording). */
 export function langOf(headline: string): Lang | null {
@@ -37,6 +37,12 @@ function domainOf(url: string) {
   } catch {
     return "";
   }
+}
+
+/** The day's pick for a topic: from the newest day, the story the most outlets covered (ties: listed first). */
+export function topPick(stories: Story[]): Story | undefined {
+  const day = stories[0]?.date;
+  return stories.filter((s) => s.date === day).reduce<Story | undefined>((best, s) => (!best || s.sources > best.sources ? s : best), undefined);
 }
 
 /** Every dated bullet on a subject page, newest section first. */

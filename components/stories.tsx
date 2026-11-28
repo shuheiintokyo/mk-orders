@@ -15,6 +15,12 @@ export function SourceLine({ s }: { s: Story }) {
   );
 }
 
+/** "📰 4社が報道": how many outlets covered the story (shown from 2). */
+export function Coverage({ s }: { s: Story }) {
+  if (s.sources < 2) return null;
+  return <span className="cov" title={`${s.sources}つのメディアがこの話題を報じています / ${s.sources} outlets covered this story`}>📰 {s.sources}社が報道 · {s.sources} sources</span>;
+}
+
 /** Which language the original article is written in, e.g. "英語 EN". */
 export function LangBadge({ s }: { s: Story }) {
   if (!s.lang) return null;
@@ -31,6 +37,7 @@ export function PickCard({ s, t }: { s: Story; t: Topic }) {
         <span className="date">{shortDate(s.date)}</span>
       </div>
       <h3>{s.headline}</h3>
+      <Coverage s={s} />
       {s.summary && <p>{s.summary}</p>}
       <div className="pick-foot"><SourceLine s={s} />{s.url && <span className="read">元記事を読む ↗<small>Read the original</small></span>}</div>
     </Tag>
@@ -44,6 +51,7 @@ export function StoryRow({ s, showDate = true }: { s: Story; showDate?: boolean 
       {showDate && <span className="row-date">{shortDate(s.date)}</span>}
       <span className="row-body">
         <strong>{s.headline}</strong>
+        <Coverage s={s} />
         {s.summary && <span className="row-sum">{s.summary}</span>}
         <SourceLine s={s} />
       </span>
