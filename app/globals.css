@@ -366,6 +366,7 @@ tr.click:hover td { background: var(--surface-2); }
 .src-k { font-weight: var(--fw-bold); text-transform: uppercase; letter-spacing: .04em; font-size: 10px; background: var(--surface-2); border-radius: 4px; padding: 2px 6px; }
 .src-v { color: var(--ink); font-weight: var(--fw-bold); }
 .src-d::before { content: "· "; }
+.cov { align-self: flex-start; font-size: var(--fs-xs); font-weight: var(--fw-bold); color: var(--ink-2); background: color-mix(in srgb, var(--tc, var(--accent)) 12%, var(--surface)); border-radius: var(--r-pill); padding: 2px 10px; }
 .lang { font-weight: var(--fw-bold); font-size: 10px; letter-spacing: .03em; color: var(--tc, var(--accent)); border: 1px solid currentColor; border-radius: var(--r-pill); padding: 1px 7px; }
 
 /* Not open yet notice */

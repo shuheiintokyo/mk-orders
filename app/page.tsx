@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { getTopics, latestWeek, notesOf, shortDate, type Topic } from "../lib/feed";
+import { getTopics, latestWeek, notesOf, shortDate, topPick, type Topic } from "../lib/feed";
 import { PickCard, StoryRow } from "../components/stories";
-import { NotOpenYet, SiteError, SiteFooter, SiteHeader } from "../components/site";
+import { SiteError, SiteFooter, SiteHeader } from "../components/site";
 
 export const revalidate = 1800; // re-read Notion at most every 30 minutes
 export const metadata: Metadata = {
@@ -21,7 +21,7 @@ export default async function Home() {
   const log = topics.find((t) => t.kind === "log");
   const week = weekly ? latestWeek(weekly.blocks) : null;
   const notes = log ? notesOf(log.blocks) : [];
-  const picks = news.flatMap((t) => (t.stories[0] ? [{ s: t.stories[0], t }] : []));
+  const picks = news.flatMap((t) => { const s = topPick(t.stories); return s ? [{ s, t }] : []; });
   const newest = news.flatMap((t) => t.stories.map((s) => s.date)).filter((d) => /^\d{4}-/.test(d)).sort().pop();
   const total = news.reduce((n, t) => n + t.stories.length, 0);
 
@@ -41,12 +41,11 @@ export default async function Home() {
       </section>
 
       <main className="wrap home" id="news">
-        <NotOpenYet />
         {picks.length > 0 && (
           <section>
             <div className="sec-head">
               <h2>今日のピックアップ <span>Top picks</span></h2>
-              <p>各トピックのいちばん新しい話題 · The newest story in each topic</p>
+              <p>各トピックで今日いちばん多く報じられた話題 · The most widely covered story in each topic today</p>
             </div>
             <div className="picks">{picks.map(({ s, t }) => <PickCard key={s.id} s={s} t={t} />)}</div>
           </section>
